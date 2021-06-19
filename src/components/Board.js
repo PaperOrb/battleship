@@ -17,7 +17,7 @@ export default function Board({ ownerProp, visibility }) {
   }
 
   // generic updater for sq inside board state
-  let updateSq = (domCoordsAsString, attributeToUpdate, value) => {
+  let findAndUpdateSq = (domCoordsAsString, attributeToUpdate, value) => {
     setBoard((prevBoard) => {
       let newBoard = prevBoard.map((row) => {
         return row.map((arrEle) => {
@@ -33,7 +33,7 @@ export default function Board({ ownerProp, visibility }) {
   let attackSq = (e) => {
     if (e.target.classList.contains("empty-sq")) {
       let domCoords = e.target.getAttribute("data-coords");
-      updateSq(domCoords, "isChecked", true);
+      findAndUpdateSq(domCoords, "isChecked", true);
     }
   };
 
@@ -43,7 +43,7 @@ export default function Board({ ownerProp, visibility }) {
 
   let placeShip = (e) => {
     let coordsAsStr = e.target.getAttribute("data-coords");
-    updateSq(coordsAsStr, "isShip", true);
+    findAndUpdateSq(coordsAsStr, "isShip", true);
 
     e.preventDefault();
   };
