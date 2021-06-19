@@ -1,14 +1,13 @@
 :root {
   --primary-color: rgb(35,35,44);
+  --water: rgb(12, 103, 177);
+  --missed: rgb(108, 114, 122);
 }
 
 html, body {
   width: 100vw;
   height: 100vh;
   background-color: var(--primary-color);
-}
-
-body {
 }
 
 * {
@@ -26,12 +25,50 @@ body {
 .board {
   display: grid;
   grid-template: repeat(7, 1fr) / repeat(7, 1fr);
-  gap: 2px;
+  gap: 3px;
   width: 35vw;
   height: 35vw;
 }
 
 /* get board squares to render */
 .board-square {
-  background-color: blue;
+  background-color: var(--water);
+}
+
+.hide-board {
+  display: none;
+}
+
+.unhide-board {
+  display: visible
+}
+
+.checked-sq {
+  background: var(--missed);
+}
+
+.friendly-sq {
+  background-color: green;
+}
+
+.hit-sq {
+  background-color: red;
+}
+
+.placing-ship-on-sq:hover {
+  background-color: forestgreen;
+}
+
+.ship-picker {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: red;
+  width: 35vw;
+  height: 35vw;
+}
+
+.ship-container {
+  width: 100%;
+  background-color: pink;
 }

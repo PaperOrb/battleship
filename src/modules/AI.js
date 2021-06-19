@@ -1,4 +1,4 @@
-// const Player = (() => {
+// const AI = (() => {
 //   // private
 //   let destroyProtocol = (board) => {};
 
@@ -19,7 +19,7 @@
 //   };
 
 //   //public
-//   let create = (playerType) => {
+//   let create = () => {
 //     return {
 //       destroyProtocol: destroyProtocol,
 //       seekProtocol: seekProtocol,
@@ -29,4 +29,4 @@
 //   return { create };
 // })();
 
-// export default Player;
+// export default AI;
