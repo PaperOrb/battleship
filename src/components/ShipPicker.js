@@ -8,7 +8,7 @@ export default function ShipPicker({ setPlacingShip }) {
 
   let drag = (event) => {
     event.dataTransfer.setData("text", event.target.id);
-    Board.setState("blah");
+    // Board.setState("blah");
     // prototype drag and dropping 1 square, then replace adjacent tiles with ship tiles. hopefully replacing nodes via vanilla JS doesnt mess up react
     // probably need to get the dropped tile + the destination, input that data into the board state and let the component update itself
   };

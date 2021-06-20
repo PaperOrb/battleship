@@ -16,13 +16,12 @@ export default function Board({ ownerProp, visibility }) {
     return arrWithCoords;
   }
 
-  // generic updater for sq inside board state
-  let findAndUpdateSq = (domCoordsAsString, attributeToUpdate, value) => {
+  // updates board with the modified squares returned from callBack
+  let updateBoard = (callBack) => {
     setBoard((prevBoard) => {
       let newBoard = prevBoard.map((row) => {
         return row.map((arrEle) => {
-          if (JSON.stringify(arrEle.coords) === domCoordsAsString) arrEle[attributeToUpdate] = value;
-          return arrEle;
+          return callBack(arrEle);
         });
       });
 
@@ -33,7 +32,11 @@ export default function Board({ ownerProp, visibility }) {
   let attackSq = (e) => {
     if (e.target.classList.contains("empty-sq")) {
       let domCoords = e.target.getAttribute("data-coords");
-      findAndUpdateSq(domCoords, "isChecked", true);
+
+      updateBoard((boardEle) => {
+        if (JSON.stringify(boardEle.coords) === domCoords) boardEle.isChecked = true;
+        return boardEle;
+      });
     }
   };
 
@@ -43,7 +46,11 @@ export default function Board({ ownerProp, visibility }) {
 
   let placeShip = (e) => {
     let coordsAsStr = e.target.getAttribute("data-coords");
-    findAndUpdateSq(coordsAsStr, "isShip", true);
+
+    updateBoard((boardEle) => {
+      if (JSON.stringify(boardEle.coords) === coordsAsStr) boardEle.isShip = true;
+      return boardEle;
+    });
 
     e.preventDefault();
   };
