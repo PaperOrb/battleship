@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Board from "./components/Board";
 import ShipPicker from "./components/ShipPicker";
 
@@ -29,12 +29,15 @@ function App() {
   }, [shipsArePlaced]);
 
   return (
-    <div className="board-container">
-      <Board ownerProp="player" placingShip={placingShip} />
-      <Board ownerProp="cpu" visibility={boardVisibility} />
-      <ShipPicker setPlacingShip={setPlacingShip} />
-    </div>
+    <ShipContext.Provider value={{ placingShip: placingShip, setPlacingShip: setPlacingShip }}>
+      <div className="board-container">
+        <Board ownerProp="player" />
+        <Board ownerProp="cpu" visibility={boardVisibility} />
+        <ShipPicker />
+      </div>
+    </ShipContext.Provider>
   );
 }
 
 export default App;
+export const ShipContext = React.createContext();

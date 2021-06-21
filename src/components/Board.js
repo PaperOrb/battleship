@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useContext, useState } from "react";
+import { ShipContext } from "../App";
 
 export default function Board({ ownerProp, visibility }) {
   const [owner, setOwner] = useState(ownerProp);
   const [board, setBoard] = useState(createBoard(7));
+  const { placingShip, setPlacingShip } = useContext(ShipContext);
 
   function createBoard(size) {
     let arr = Array(size).fill(Array(size).fill(""));
@@ -47,10 +49,20 @@ export default function Board({ ownerProp, visibility }) {
   let placeShip = (e) => {
     let coordsAsStr = e.target.getAttribute("data-coords");
 
-    updateBoard((boardEle) => {
-      if (JSON.stringify(boardEle.coords) === coordsAsStr) boardEle.isShip = true;
+    let sqIsAvailable = (boardEle) => {
+      // calculate squares where ship won't overflow board, and set isAvailable = true
+      // then, if isAvaiable === true, set boardEle.isShip = true
+      // then, work on setting neighboring squares
+      if (JSON.stringify(boardEle.coords) === coordsAsStr) {
+        boardEle.isAvailable = true;
+      } else {
+        boardEle.isAvailable = false;
+      }
+
       return boardEle;
-    });
+    };
+
+    updateBoard(sqIsAvailable);
 
     e.preventDefault();
   };
