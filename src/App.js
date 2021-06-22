@@ -5,11 +5,7 @@ import ShipPicker from "./components/ShipPicker";
 function App() {
   const [boardVisibility, setBoardVisibility] = useState("hide-board");
   const [shipsArePlaced, setShipsArePlaced] = useState("hide-board");
-  const [placingShip, setPlacingShip] = useState(false);
-
-  useEffect(() => {
-    console.log("placing ship!");
-  }, [placingShip]);
+  const [currentShip, setCurrentShip] = useState(false);
 
   // const [player, setPlayer] = useState(player.create("player"));
 
@@ -24,18 +20,17 @@ function App() {
   // }, []);
 
   // unhides CPU board once all ships are placed
-  useEffect(() => {
-    console.log("all ships placed!");
-  }, [shipsArePlaced]);
+  useEffect(() => {}, [shipsArePlaced]);
 
   return (
-    <ShipContext.Provider value={{ placingShip: placingShip, setPlacingShip: setPlacingShip }}>
-      <div className="board-container">
+    <div className="board-container">
+      <ShipContext.Provider value={{ currentShip: currentShip, setCurrentShip: setCurrentShip }}>
         <Board ownerProp="player" />
         <Board ownerProp="cpu" visibility={boardVisibility} />
+
         <ShipPicker />
-      </div>
-    </ShipContext.Provider>
+      </ShipContext.Provider>
+    </div>
   );
 }
 

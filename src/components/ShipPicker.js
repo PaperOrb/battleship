@@ -1,11 +1,9 @@
-import { useState, useContext } from "react";
-import Board from "./Board";
+import { useContext } from "react";
 import { ShipContext } from "../App";
 
 export default function ShipPicker() {
-  const { placingShip, setPlacingShip } = useContext(ShipContext);
+  const { currentShip, setCurrentShip } = useContext(ShipContext);
 
-  // grab the clicked carrier square and drop it into the board on an available square. will need to tweak available squares based on length to left/right of clicked ship sq
   // sets ship object when a ship is dragged/clicked
   let setupShip = (e) => {
     let clickedShipSq = Number(e.target.getAttribute("data-num"));
@@ -14,7 +12,7 @@ export default function ShipPicker() {
     let sqsAfter = length - clickedShipSq;
     let sqsBefore = clickedShipSq - 1;
     let ship = { name: e.target.id, index: clickedShipSq, squaresBefore: sqsBefore, squaresAfter: sqsAfter };
-    setPlacingShip(ship);
+    setCurrentShip(ship);
   };
 
   let carrier = () => {
@@ -38,11 +36,7 @@ export default function ShipPicker() {
   };
 
   let dragShip = (event) => {
-    // console.log(clickedShipSq);
-    event.dataTransfer.setData("text", event.target.id);
-    // Board.setState("blah");
-    // prototype drag and dropping 1 square, then replace adjacent tiles with ship tiles. hopefully replacing nodes via vanilla JS doesnt mess up react
-    // probably need to get the dropped tile + the destination, input that data into the board state and let the component update itself
+    event.dataTransfer.setData("ship", JSON.stringify(currentShip));
   };
 
   return <div className="ship-picker">{carrier()}</div>;
