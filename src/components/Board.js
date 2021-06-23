@@ -1,8 +1,31 @@
-import { useEffect, useState } from "react";
+import { useEffect, useContext, useState } from "react";
+import { ShipContext } from "../App";
 
 export default function Board({ ownerProp, visibility }) {
-  const [owner, setOwner] = useState(ownerProp);
-  const [board, setBoard] = useState(createBoard(7));
+  const [boardSize] = useState(7);
+  const [board, setBoard] = useState(createBoard(boardSize));
+  const { currentShip } = useContext(ShipContext);
+
+  // set movable squares when a ship is selected
+  useEffect(() => {
+    let sqIsMovable = (boardEle) => {
+      let xRightSideCoord = boardEle.coords[1] + currentShip.squaresAfter;
+      let xLeftSideCoord = boardEle.coords[1] - currentShip.squaresBefore;
+      let yBottomSideCoord = boardEle.coords[1] + currentShip.squaresAfter;
+      let yTopSideCoord = boardEle.coords[1] - currentShip.squaresBefore;
+
+      if (xRightSideCoord < boardSize && xLeftSideCoord > -1) {
+        // replace this placeholder condition with a proper one
+        boardEle.isMovable = true;
+      } else {
+        boardEle.isMovable = false;
+      }
+
+      return boardEle;
+    };
+
+    updateBoard(sqIsMovable);
+  }, [currentShip]); // stub current ship
 
   function createBoard(size) {
     let arr = Array(size).fill(Array(size).fill(""));
@@ -44,23 +67,26 @@ export default function Board({ ownerProp, visibility }) {
     e.preventDefault();
   };
 
+  // write tests for dragging ships. need to stub e here
   let placeShip = (e) => {
-    let coordsAsStr = e.target.getAttribute("data-coords");
-
+    e.preventDefault();
+    let domCoords = e.target.getAttribute("data-coords");
     updateBoard((boardEle) => {
-      if (JSON.stringify(boardEle.coords) === coordsAsStr) boardEle.isShip = true;
+      if (JSON.stringify(boardEle.coords) === domCoords && boardEle.isMovable === true) boardEle.isShip = true;
       return boardEle;
     });
-
-    e.preventDefault();
   };
 
   let renderSquare = (sq, key) => {
     let clickHandler;
     let squareClass = "board-square empty-sq"; // squares default to empty
-    if (sq.isHit) squareClass = "board-square hit-sq"; // hit ship
-    if (sq.isChecked) squareClass = "board-square checked-sq"; // square already checked
-    if (sq.isShip && sq.owner === "player") squareClass = "board-square friendly-sq"; // friendly ship
+    if (sq.isHit) {
+      squareClass = "board-square hit-sq"; // square contains a hit ship
+    } else if (sq.isShip && sq.owner === "player") {
+      squareClass = "board-square friendly-sq"; // square contains a friendly ship
+    } else if (sq.isChecked) {
+      squareClass = "board-square checked-sq"; // square has been checked
+    }
     if (sq.owner !== "player") clickHandler = attackSq;
 
     return (

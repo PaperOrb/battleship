@@ -5,7 +5,11 @@ describe("board", () => {
   let component;
 
   beforeEach(() => {
-    component = render(<Board />);
+    component = render(
+      <ShipContext.Provider value={{ currentShip: "asdf" }}>
+        <Board />
+      </ShipContext.Provider>
+    );
     // ({ result } = renderHook(() => useBoard(2, "cpu")));
     // result = renderHook(() => useBoard(2, "cpu")).result;
   });

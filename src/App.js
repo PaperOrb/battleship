@@ -1,15 +1,11 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Board from "./components/Board";
 import ShipPicker from "./components/ShipPicker";
 
 function App() {
   const [boardVisibility, setBoardVisibility] = useState("hide-board");
   const [shipsArePlaced, setShipsArePlaced] = useState("hide-board");
-  const [placingShip, setPlacingShip] = useState(false);
-
-  useEffect(() => {
-    console.log("placing ship!");
-  }, [placingShip]);
+  const [currentShip, setCurrentShip] = useState(false);
 
   // const [player, setPlayer] = useState(player.create("player"));
 
@@ -24,17 +20,19 @@ function App() {
   // }, []);
 
   // unhides CPU board once all ships are placed
-  useEffect(() => {
-    console.log("all ships placed!");
-  }, [shipsArePlaced]);
+  useEffect(() => {}, [shipsArePlaced]);
 
   return (
     <div className="board-container">
-      <Board ownerProp="player" placingShip={placingShip} />
-      <Board ownerProp="cpu" visibility={boardVisibility} />
-      <ShipPicker setPlacingShip={setPlacingShip} />
+      <ShipContext.Provider value={{ currentShip: currentShip, setCurrentShip: setCurrentShip }}>
+        <Board ownerProp="player" />
+        <Board ownerProp="cpu" visibility={boardVisibility} />
+
+        <ShipPicker />
+      </ShipContext.Provider>
     </div>
   );
 }
 
 export default App;
+export const ShipContext = React.createContext();
