@@ -1,5 +1,6 @@
 import { render, fireEvent } from "@testing-library/react";
 import Board from "../components/Board";
+import { ShipContext } from "../App";
 
 describe("board", () => {
   let component;
