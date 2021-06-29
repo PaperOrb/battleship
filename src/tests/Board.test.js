@@ -1,31 +1,50 @@
 import { render, fireEvent } from "@testing-library/react";
+import useMovableSquares from "../hooks/useMovableSquares";
 import Board from "../components/Board";
 import { ShipContext } from "../App";
 
 describe("board", () => {
   let component;
+  let ship = "";
 
-  beforeEach(() => {
-    component = render(
-      <ShipContext.Provider value={{ currentShip: "asdf" }}>
+  // beforeEach(() => {
+  //   component = render(
+  //     <ShipContext.Provider value={{ currentShip: ship }}>
+  //       <Board />
+  //     </ShipContext.Provider>
+  //   );
+  // });
+
+  // test("clicking empty cpu square applies checked-sq class", () => {
+  //   let emptyCpuSquare = component.getByTestId("square0"); // square0 refers to square${key} on the board
+  //   fireEvent.click(emptyCpuSquare);
+  //   expect(emptyCpuSquare.classList).toContain("checked-sq");
+  // });
+
+  // test("placing horizontal carrier at far right is disallowed", () => {
+  //   let disallowedSq = component.getByTestId("square4");
+  //   ship = { name: "carrier", index: 1, squaresBefore: 0, squaresAfter: 4 };
+  //   fireEvent.drop(disallowedSq);
+  //   let result = disallowedSq.classList.contains("friendly-sq");
+  //   expect(result).toEqual(false);
+  // });
+
+  test("placing horizontal carrier at far left is allowed", () => {
+    ship = { name: "carrier", index: 1, squaresBefore: 0, squaresAfter: 4 };
+    useMovableSquares(ship, 7);
+
+    let component2 = render(
+      <ShipContext.Provider value={{ currentShip: ship }}>
         <Board />
       </ShipContext.Provider>
     );
-    // ({ result } = renderHook(() => useBoard(2, "cpu")));
-    // result = renderHook(() => useBoard(2, "cpu")).result;
+
+    let disallowedSq = component2.getByTestId("square0");
+    fireEvent.drop(disallowedSq);
+    console.log(`${disallowedSq.classList}`);
+    let result = disallowedSq.classList.contains("friendly-sq");
+    expect(result).toEqual(true);
   });
-
-  test("clicking empty cpu square applies checked-sq class", () => {
-    let emtpyCpuSquare = component.getByTestId("square0");
-
-    fireEvent.click(emtpyCpuSquare);
-
-    expect(emtpyCpuSquare.classList).toContain("checked-sq");
-  });
-
-  test.todo("clicking empty cpu square applies checked-sq class");
-
-  test.todo("clicking empty cpu square applies checked-sq class");
 
   test.todo("clicking empty cpu square applies checked-sq class");
 

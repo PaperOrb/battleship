@@ -1,5 +1,6 @@
 import { useEffect, useContext, useState } from "react";
 import { ShipContext } from "../App";
+import useMovableSquares from "../hooks/useMovableSquares";
 
 export default function Board({ ownerProp, visibility }) {
   const [boardSize] = useState(7);
@@ -7,25 +8,7 @@ export default function Board({ ownerProp, visibility }) {
   const { currentShip } = useContext(ShipContext);
 
   // set movable squares when a ship is selected
-  useEffect(() => {
-    let sqIsMovable = (boardEle) => {
-      let xRightSideCoord = boardEle.coords[1] + currentShip.squaresAfter;
-      let xLeftSideCoord = boardEle.coords[1] - currentShip.squaresBefore;
-      let yBottomSideCoord = boardEle.coords[1] + currentShip.squaresAfter;
-      let yTopSideCoord = boardEle.coords[1] - currentShip.squaresBefore;
-
-      if (xRightSideCoord < boardSize && xLeftSideCoord > -1) {
-        // replace this placeholder condition with a proper one
-        boardEle.isMovable = true;
-      } else {
-        boardEle.isMovable = false;
-      }
-
-      return boardEle;
-    };
-
-    updateBoard(sqIsMovable);
-  }, [currentShip]); // stub current ship
+  useMovableSquares(currentShip, boardSize)
 
   function createBoard(size) {
     let arr = Array(size).fill(Array(size).fill(""));
@@ -67,7 +50,6 @@ export default function Board({ ownerProp, visibility }) {
     e.preventDefault();
   };
 
-  // write tests for dragging ships. need to stub e here
   let placeShip = (e) => {
     e.preventDefault();
     let domCoords = e.target.getAttribute("data-coords");
