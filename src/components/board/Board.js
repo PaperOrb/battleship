@@ -36,6 +36,10 @@ export default function Board({ ownerProp, visibility }) {
     e.preventDefault();
   };
 
+  // fireEvent.drop inside board.test triggers the squares onDrop, which triggers this method.
+  // the issue right now is useSetMovableSquares never sets movable squares because currentShip never triggers the useEffect
+  // so the solution is moving setupShip from ShipPicker.js to BoardLogic.js. Then import setupShip into shipPicker from BoardLogic
+  // next issue after that is I need to figure out how to mock event setupShip(e), or add an additional wrapper for testing?
   let placeShip = (e) => {
     e.preventDefault();
     let domCoords = e.target.getAttribute("data-coords");
