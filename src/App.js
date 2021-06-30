@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Board from "./components/board/Board";
+import boardLogic from "./components/board/BoardLogic";
 import ShipPicker from "./components/ships/ShipPicker";
 
 function App() {
@@ -24,7 +25,7 @@ function App() {
 
   return (
     <div className="board-container">
-      <ShipContext.Provider value={{ currentShip: currentShip, setCurrentShip: setCurrentShip }}>
+      <ShipContext.Provider value={{ currentShip: currentShip, setCurrentShip: setCurrentShip, boardLogic: boardLogic() }}>
         <Board ownerProp="player" />
         <Board ownerProp="cpu" visibility={boardVisibility} />
 

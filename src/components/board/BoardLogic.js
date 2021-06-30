@@ -1,6 +1,22 @@
 import { useEffect } from "react";
 
-const boardLogic = (setBoard, boardSize, currentShip) => {
+const boardLogic = (setBoard, boardSize, currentShip, setCurrentShip) => {
+  // sets ship object when a ship is dragged/clicked
+  let setupShip = (e) => {
+    console.log("trigg");
+    let clickedShipSq = Number(e.target.getAttribute("data-num"));
+    let length = Number(e.target.getAttribute("data-length"));
+
+    let sqsAfter = length - clickedShipSq;
+    let sqsBefore = clickedShipSq - 1;
+    let ship = { name: e.target.id, index: clickedShipSq, squaresBefore: sqsBefore, squaresAfter: sqsAfter };
+    setCurrentShip(ship);
+  };
+
+  let dragShip = (event) => {
+    event.dataTransfer.setData("ship", JSON.stringify(currentShip));
+  };
+
   let updateBoard = (callBack) => {
     setBoard((prevBoard) => {
       let newBoard = prevBoard.map((row) => {
@@ -35,7 +51,7 @@ const boardLogic = (setBoard, boardSize, currentShip) => {
     }, [currentShip]);
   };
 
-  return { updateBoard, useSetMovableSquares };
+  return { updateBoard, useSetMovableSquares, setupShip, dragShip };
 };
 
 export default boardLogic;

@@ -3,10 +3,10 @@ import boardLogic from "./BoardLogic";
 import { ShipContext } from "../../App";
 
 export default function Board({ ownerProp, visibility }) {
-  const { currentShip } = useContext(ShipContext);
+  const { currentShip, setCurrentShip } = useContext(ShipContext);
   const [boardSize] = useState(7);
   const [board, setBoard] = useState(createBoard(boardSize));
-  const { updateBoard, useSetMovableSquares } = boardLogic(setBoard, boardSize, currentShip);
+  const { updateBoard, useSetMovableSquares } = boardLogic(setBoard, boardSize, currentShip, setCurrentShip);
 
   function createBoard(size) {
     let arr = Array(size).fill(Array(size).fill(""));
@@ -36,8 +36,8 @@ export default function Board({ ownerProp, visibility }) {
     e.preventDefault();
   };
 
-  // fireEvent.drop inside board.test triggers the squares onDrop, which triggers this method.
-  // the issue right now is useSetMovableSquares never sets movable squares because currentShip never triggers the useEffect
+  // fireEvent.drop inside board.test triggers the dropped square's onDrop, which triggers this method.
+  // the issue right now is useSetMovableSquares never sets movable squares because currentShip is nnever set, and thus never triggers the useEffect
   // so the solution is moving setupShip from ShipPicker.js to BoardLogic.js. Then import setupShip into shipPicker from BoardLogic
   // next issue after that is I need to figure out how to mock event setupShip(e), or add an additional wrapper for testing?
   let placeShip = (e) => {

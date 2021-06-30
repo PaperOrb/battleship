@@ -1,19 +1,13 @@
-import { useContext } from "react";
+import boardLogic from "../board/BoardLogic";
 import { ShipContext } from "../../App";
+import { useContext } from "react";
 
 export default function ShipPicker() {
   const { currentShip, setCurrentShip } = useContext(ShipContext);
-
-  // sets ship object when a ship is dragged/clicked
-  let setupShip = (e) => {
-    let clickedShipSq = Number(e.target.getAttribute("data-num"));
-    let length = Number(e.target.getAttribute("data-length"));
-
-    let sqsAfter = length - clickedShipSq;
-    let sqsBefore = clickedShipSq - 1;
-    let ship = { name: e.target.id, index: clickedShipSq, squaresBefore: sqsBefore, squaresAfter: sqsAfter };
-    setCurrentShip(ship);
-  };
+  const { setupShip, dragShip } = boardLogic(); // have duplicate boardLogic in ShipPicker.js and Board.js.
+  // can't move boardLogic up into App though because it relies on board state.
+  // solution? i could move board state into app, but it relies on createBoard, so I'd have to move that then...
+  // maybe i could leave board state blank and then make a call to setBoard(createBoard) inside Board.js?
 
   let carrier = () => {
     return (
@@ -33,10 +27,6 @@ export default function ShipPicker() {
         })}
       </div>
     );
-  };
-
-  let dragShip = (event) => {
-    event.dataTransfer.setData("ship", JSON.stringify(currentShip));
   };
 
   return <div className="ship-picker">{carrier()}</div>;
