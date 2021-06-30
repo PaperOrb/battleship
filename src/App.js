@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Board from "./components/board/BoardView";
+import Board from "./components/board/Board";
 import ShipPicker from "./components/ships/ShipPicker";
 
 function App() {

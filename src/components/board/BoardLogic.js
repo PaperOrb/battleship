@@ -1,9 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
-const boardLogic = (({board, setBoard}) => {
-
-
-  let updateBoard = (setBoard, callBack) => {
+const boardLogic = (setBoard, boardSize, currentShip) => {
+  let updateBoard = (callBack) => {
     setBoard((prevBoard) => {
       let newBoard = prevBoard.map((row) => {
         return row.map((arrEle) => {
@@ -15,7 +13,7 @@ const boardLogic = (({board, setBoard}) => {
     });
   };
 
-  let useSetMovableSquares = (currentShip, boardSize, setBoard) => {
+  let useSetMovableSquares = () => {
     useEffect(() => {
       let sqIsMovable = (boardEle) => {
         let xRightSideCoord = boardEle.coords[1] + currentShip.squaresAfter;
@@ -24,6 +22,7 @@ const boardLogic = (({board, setBoard}) => {
         let yTopSideCoord = boardEle.coords[1] - currentShip.squaresBefore;
 
         if (xRightSideCoord < boardSize && xLeftSideCoord > -1) {
+          // replace this placeholder condition with a proper one
           boardEle.isMovable = true;
         } else {
           boardEle.isMovable = false;
@@ -32,11 +31,11 @@ const boardLogic = (({board, setBoard}) => {
         return boardEle;
       };
 
-      updateBoard(setBoard, sqIsMovable);
-    }, [currentShip, boardSize]);
+      updateBoard(sqIsMovable);
+    }, [currentShip]);
   };
 
   return { updateBoard, useSetMovableSquares };
-})();
+};
 
 export default boardLogic;

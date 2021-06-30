@@ -1,12 +1,12 @@
 import { render, fireEvent } from "@testing-library/react";
-import boardLogic from "./BoardController";
-import Board from "./BoardView";
+import boardLogic from "./BoardLogic";
+import Board from "./Board";
 import { ShipContext } from "../../App";
+import { renderHook, act } from "@testing-library/react-hooks";
 
 describe("board", () => {
   let component;
   let ship = "";
-  const { updateBoard, useSetMovableSquares } = boardLogic;
 
   // beforeEach(() => {
   //   component = render(
@@ -32,7 +32,6 @@ describe("board", () => {
 
   test("placing horizontal carrier at far left is allowed", () => {
     ship = { name: "carrier", index: 1, squaresBefore: 0, squaresAfter: 4 };
-    useSetMovableSquares(ship, 7, setBoard);
 
     let component2 = render(
       <ShipContext.Provider value={{ currentShip: ship }}>
@@ -40,10 +39,10 @@ describe("board", () => {
       </ShipContext.Provider>
     );
 
-    let disallowedSq = component2.getByTestId("square0");
-    fireEvent.drop(disallowedSq);
-    console.log(`${disallowedSq.classList}`);
-    let result = disallowedSq.classList.contains("friendly-sq");
+    let allowedSq = component2.getByTestId("square0");
+    fireEvent.drop(allowedSq);
+    console.log(`${allowedSq.classList}`);
+    let result = allowedSq.classList.contains("friendly-sq");
     expect(result).toEqual(true);
   });
 
