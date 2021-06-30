@@ -1,14 +1,15 @@
-import { useEffect, useContext, useState } from "react";
-import { ShipContext } from "../App";
-import useMovableSquares from "../hooks/useMovableSquares";
+import { useContext, useState } from "react";
+import boardLogic from "./BoardController";
+import { ShipContext } from "../../App";
 
 export default function Board({ ownerProp, visibility }) {
   const [boardSize] = useState(7);
   const [board, setBoard] = useState(createBoard(boardSize));
   const { currentShip } = useContext(ShipContext);
+  const { updateBoard, useSetMovableSquares } = boardLogic;
 
   // set movable squares when a ship is selected
-  useMovableSquares(currentShip, boardSize)
+  useSetMovableSquares(currentShip, boardSize, setBoard);
 
   function createBoard(size) {
     let arr = Array(size).fill(Array(size).fill(""));
@@ -22,24 +23,11 @@ export default function Board({ ownerProp, visibility }) {
     return arrWithCoords;
   }
 
-  // updates board with the modified squares returned from callBack
-  let updateBoard = (callBack) => {
-    setBoard((prevBoard) => {
-      let newBoard = prevBoard.map((row) => {
-        return row.map((arrEle) => {
-          return callBack(arrEle);
-        });
-      });
-
-      return newBoard;
-    });
-  };
-
   let attackSq = (e) => {
     if (e.target.classList.contains("empty-sq")) {
       let domCoords = e.target.getAttribute("data-coords");
 
-      updateBoard((boardEle) => {
+      updateBoard(setBoard, (boardEle) => {
         if (JSON.stringify(boardEle.coords) === domCoords) boardEle.isChecked = true;
         return boardEle;
       });
@@ -53,7 +41,7 @@ export default function Board({ ownerProp, visibility }) {
   let placeShip = (e) => {
     e.preventDefault();
     let domCoords = e.target.getAttribute("data-coords");
-    updateBoard((boardEle) => {
+    updateBoard(setBoard, (boardEle) => {
       if (JSON.stringify(boardEle.coords) === domCoords && boardEle.isMovable === true) boardEle.isShip = true;
       return boardEle;
     });

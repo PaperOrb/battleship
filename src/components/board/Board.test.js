@@ -1,11 +1,12 @@
 import { render, fireEvent } from "@testing-library/react";
-import useMovableSquares from "../hooks/useMovableSquares";
-import Board from "../components/Board";
-import { ShipContext } from "../App";
+import boardLogic from "./BoardController";
+import Board from "./BoardView";
+import { ShipContext } from "../../App";
 
 describe("board", () => {
   let component;
   let ship = "";
+  const { updateBoard, useSetMovableSquares } = boardLogic;
 
   // beforeEach(() => {
   //   component = render(
@@ -31,7 +32,7 @@ describe("board", () => {
 
   test("placing horizontal carrier at far left is allowed", () => {
     ship = { name: "carrier", index: 1, squaresBefore: 0, squaresAfter: 4 };
-    useMovableSquares(ship, 7);
+    useSetMovableSquares(ship, 7, setBoard);
 
     let component2 = render(
       <ShipContext.Provider value={{ currentShip: ship }}>

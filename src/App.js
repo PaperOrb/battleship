@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import Board from "./components/Board";
-import ShipPicker from "./components/ShipPicker";
+import Board from "./components/board/BoardView";
+import ShipPicker from "./components/ships/ShipPicker";
 
 function App() {
   const [boardVisibility, setBoardVisibility] = useState("hide-board");
