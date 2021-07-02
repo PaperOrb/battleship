@@ -3,17 +3,16 @@ import Board from "./Board";
 import { ShipContext } from "../../App";
 import { renderHook, act } from "@testing-library/react-hooks";
 
-describe("board", () => {
-  let component;
-  let ship = "";
+let boardComponent = (ship) => {
+  return render(
+    <ShipContext.Provider value={{ currentShip: ship }}>
+      <Board ownerProp="player" />
+    </ShipContext.Provider>
+  );
+};
 
-  // beforeEach(() => {
-  //   component = render(
-  //     <ShipContext.Provider value={{ currentShip: ship }}>
-  //       <Board />
-  //     </ShipContext.Provider>
-  //   );
-  // });
+describe("drag & drop", () => {
+  beforeEach(() => {});
 
   // test("clicking empty cpu square applies checked-sq class", () => {
   //   let emptyCpuSquare = component.getByTestId("square0"); // square0 refers to square${key} on the board
@@ -21,33 +20,39 @@ describe("board", () => {
   //   expect(emptyCpuSquare.classList).toContain("checked-sq");
   // });
 
-  // test("placing horizontal carrier at far right is disallowed", () => {
-  //   let disallowedSq = component.getByTestId("square4");
-  //   ship = { name: "carrier", index: 1, squaresBefore: 0, squaresAfter: 4 };
-  //   fireEvent.drop(disallowedSq);
-  //   let result = disallowedSq.classList.contains("friendly-sq");
-  //   expect(result).toEqual(false);
-  // });
+  describe("horizontal carrier by its first square", () => {
+    test("onto board[0, 0] is allowed", () => {
+      let currentShip = { name: "carrier", index: 1, squaresBefore: 0, squaresAfter: 4 };
+      let allowedSq = boardComponent(currentShip).getByTestId("square0");
+      fireEvent.drop(allowedSq);
+      let result = allowedSq.classList.contains("friendly-sq");
+      expect(result).toEqual(true);
+    });
 
-  test("placing horizontal carrier at far left is allowed", () => {
-    ship = { name: "carrier", index: 1, squaresBefore: 0, squaresAfter: 4 };
-
-    let component2 = render(
-      <ShipContext.Provider value={{ currentShip: ship }}>
-        <Board ownerProp="player" />
-      </ShipContext.Provider>
-    );
-
-    let allowedSq = component2.getByTestId("square0");
-    fireEvent.drop(allowedSq);
-    console.log(`${allowedSq.classList}`);
-    let result = allowedSq.classList.contains("friendly-sq");
-    expect(result).toEqual(true);
+    test("onto board[0, 6] is disallowed", () => {
+      let currentShip = { name: "carrier", index: 1, squaresBefore: 0, squaresAfter: 4 };
+      let allowedSq = boardComponent(currentShip).getByTestId("square6");
+      fireEvent.drop(allowedSq);
+      let result = allowedSq.classList.contains("friendly-sq");
+      expect(result).toEqual(false);
+    });
   });
 
-  test.todo("clicking empty cpu square applies checked-sq class");
+  describe("horizontal carrier by its last square", () => {
+    test("onto board[6, 0] is disallowed", () => {
+      let currentShip = { name: "carrier", index: 5, squaresBefore: 4, squaresAfter: 0 };
+      let allowedSq = boardComponent(currentShip).getByTestId("square60");
+      fireEvent.drop(allowedSq);
+      let result = allowedSq.classList.contains("friendly-sq");
+      expect(result).toEqual(false);
+    });
 
-  test.todo("clicking empty cpu square applies checked-sq class");
-
-  test.todo("clicking empty cpu square applies checked-sq class");
+    test("onto board[6, 6] is allowed", () => {
+      let currentShip = { name: "carrier", index: 5, squaresBefore: 4, squaresAfter: 0 };
+      let allowedSq = boardComponent(currentShip).getByTestId("square66");
+      fireEvent.drop(allowedSq);
+      let result = allowedSq.classList.contains("friendly-sq");
+      expect(result).toEqual(true);
+    });
+  });
 });
