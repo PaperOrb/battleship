@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { ShipContext } from "../App";
+import { ShipContext } from "../../App";
 
 export default function ShipPicker() {
   const { currentShip, setCurrentShip } = useContext(ShipContext);

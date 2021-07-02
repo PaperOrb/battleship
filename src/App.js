@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import Board from "./components/Board";
-import ShipPicker from "./components/ShipPicker";
+import Board from "./components/Board/Board";
+import ShipPicker from "./components/ShipPicker/ShipPicker";
 
 function App() {
   const [boardVisibility, setBoardVisibility] = useState("hide-board");
@@ -25,8 +25,8 @@ function App() {
   return (
     <div className="board-container">
       <ShipContext.Provider value={{ currentShip: currentShip, setCurrentShip: setCurrentShip }}>
-        <Board ownerProp="player" />
-        <Board ownerProp="cpu" visibility={boardVisibility} />
+        <Board ownerProp="player" currentShip={currentShip} />
+        <Board ownerProp="cpu" visibility={boardVisibility} currentShip={currentShip} />
 
         <ShipPicker />
       </ShipContext.Provider>

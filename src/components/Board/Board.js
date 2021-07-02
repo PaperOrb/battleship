@@ -1,10 +1,10 @@
 import { useEffect, useContext, useState } from "react";
-import { ShipContext } from "../App";
+import { ShipContext } from "../../App";
 
-export default function Board({ ownerProp, visibility }) {
+export default function Board({ ownerProp, visibility, currentShip }) {
   const [boardSize] = useState(7);
   const [board, setBoard] = useState(createBoard(boardSize));
-  const { currentShip } = useContext(ShipContext);
+  // const { currentShip } = useContext(ShipContext);
 
   // set movable squares when a ship is selected
   useEffect(() => {
@@ -25,7 +25,7 @@ export default function Board({ ownerProp, visibility }) {
     };
 
     updateBoard(sqIsMovable);
-  }, [currentShip]);
+  }, [currentShip, boardSize]);
 
   function createBoard(size) {
     let arr = Array(size).fill(Array(size).fill(""));
