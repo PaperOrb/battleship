@@ -3,7 +3,6 @@ import { useEffect } from "react";
 const boardLogic = (setBoard, boardSize, currentShip, setCurrentShip) => {
   // sets ship object when a ship is dragged/clicked
   let setupShip = (e) => {
-    console.log("trigg");
     let clickedShipSq = Number(e.target.getAttribute("data-num"));
     let length = Number(e.target.getAttribute("data-length"));
 

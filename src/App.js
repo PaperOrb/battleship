@@ -8,6 +8,7 @@ function App() {
   const [shipsArePlaced, setShipsArePlaced] = useState("hide-board");
   const [currentShip, setCurrentShip] = useState(false);
 
+
   // const [player, setPlayer] = useState(player.create("player"));
 
   // const [enemy, setEnemy] = useState(player.create("cpu"));
@@ -25,7 +26,15 @@ function App() {
 
   return (
     <div className="board-container">
-      <ShipContext.Provider value={{ currentShip: currentShip, setCurrentShip: setCurrentShip, boardLogic: boardLogic() }}>
+      <ShipContext.Provider
+        value={{
+          currentShip: currentShip,
+          setCurrentShip: setCurrentShip,
+          boardLogic: boardLogic(setBoard, boardSize, currentShip, setCurrentShip),
+          board: board,
+          setBoard: setBoard,
+        }}
+      >
         <Board ownerProp="player" />
         <Board ownerProp="cpu" visibility={boardVisibility} />
 

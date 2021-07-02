@@ -6,8 +6,8 @@ export default function ShipPicker() {
   const { currentShip, setCurrentShip } = useContext(ShipContext);
   const { setupShip, dragShip } = boardLogic(); // have duplicate boardLogic in ShipPicker.js and Board.js.
   // can't move boardLogic up into App though because it relies on board state.
-  // solution? i could move board state into app, but it relies on createBoard, so I'd have to move that then...
-  // maybe i could leave board state blank and then make a call to setBoard(createBoard) inside Board.js?
+  // solution? brand new approach of testing via props.
+  // simulate click on ship picker and expect that currentShip is set. then work from there
 
   let carrier = () => {
     return (
