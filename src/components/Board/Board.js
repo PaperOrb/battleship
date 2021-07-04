@@ -15,7 +15,7 @@ export default function Board({ ownerProp, visibility }) {
       let yTopSideCoord = boardEle.coords[1] - currentShip.squaresBefore;
 
       if (xRightSideCoord < boardSize && xLeftSideCoord > -1) {
-        // replace this placeholder condition with a proper one
+        // update with a dynamic condition for determining if sqIsMovable
         boardEle.isMovable = true;
       } else {
         boardEle.isMovable = false;
@@ -65,12 +65,32 @@ export default function Board({ ownerProp, visibility }) {
     e.preventDefault();
   };
 
-  // write tests for dragging ships
   let placeShip = (e) => {
     e.preventDefault();
-    let domCoords = e.target.getAttribute("data-coords");
+    let domCoordsString = e.target.getAttribute("data-coords");
+    let domCoordsInt = JSON.parse(domCoordsString);
+    let row = domCoordsInt[0];
+    let col = domCoordsInt[1];
+    if (board[row][col].isMovable === false) return;
+
+    let index = 1;
+    let shipSquares = [JSON.parse(JSON.stringify(domCoordsInt))];
+
+    for (let times = currentShip.squaresBefore; times > 0; --times) {
+      domCoordsInt[index] -= 1;
+      shipSquares.push(JSON.parse(JSON.stringify(domCoordsInt)));
+    }
+
+    for (let times = currentShip.squaresAfter; times > 0; --times) {
+      domCoordsInt[index] += 1;
+      shipSquares.push(JSON.parse(JSON.stringify(domCoordsInt)));
+    }
+
     updateBoard((boardEle) => {
-      if (JSON.stringify(boardEle.coords) === domCoords && boardEle.isMovable === true) boardEle.isShip = true;
+      shipSquares.forEach((domCoordInt) => {
+        let coordString = JSON.stringify(domCoordInt);
+        if (JSON.stringify(boardEle.coords) === coordString) boardEle.isShip = true; // only setting isShip 3 times?
+      });
       return boardEle;
     });
   };
@@ -90,7 +110,7 @@ export default function Board({ ownerProp, visibility }) {
     return (
       <div
         key={key}
-        data-testid={`square${key}`}
+        data-testid={`square${key}_${ownerProp}`}
         className={squareClass}
         onClick={clickHandler}
         data-coords={JSON.stringify(sq.coords)}
@@ -103,7 +123,7 @@ export default function Board({ ownerProp, visibility }) {
   let renderBoard = () => {
     let boardJSX = board.map((row, row_ind) => {
       return row.map((sq, sq_ind) => {
-        let key = Number(String(row_ind) + String(sq_ind)); // row is tens place and sq is ones place
+        let key = Number(`${String(row_ind) + String(sq_ind)}`); // row is tens place and sq is ones place
         return renderSquare(sq, key);
       });
     });

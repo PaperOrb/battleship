@@ -3,7 +3,7 @@ import Board from "./Board";
 import { ShipContext } from "../../App";
 import { renderHook, act } from "@testing-library/react-hooks";
 
-let boardComponent = (ship) => {
+const setupBoard = (ship) => {
   return render(
     <ShipContext.Provider value={{ currentShip: ship }}>
       <Board ownerProp="player" />
@@ -23,33 +23,52 @@ describe("drag & drop", () => {
   describe("horizontal carrier by its first square", () => {
     test("onto board[0, 0] is allowed", () => {
       let currentShip = { name: "carrier", index: 1, squaresBefore: 0, squaresAfter: 4 };
-      let allowedSq = boardComponent(currentShip).getByTestId("square0");
-      fireEvent.drop(allowedSq);
-      let result = allowedSq.classList.contains("friendly-sq");
-      expect(result).toEqual(true);
+      let boardComponent = setupBoard(currentShip);
+      let sqDestination = boardComponent.getByTestId(`square0_player`);
+      fireEvent.drop(sqDestination);
+
+      let occupiedSquares = [0, 1, 2, 3, 4, 5, 6].map((index) => {
+        let sq = boardComponent.getByTestId(`square${index}_player`);
+        return sq.classList.contains("friendly-sq");
+      });
+
+      let correctOccupiedSquares = JSON.stringify([true, true, true, true, true, false, false]);
+      expect(JSON.stringify(occupiedSquares)).toEqual(correctOccupiedSquares);
     });
 
     test("onto board[0, 6] is disallowed", () => {
       let currentShip = { name: "carrier", index: 1, squaresBefore: 0, squaresAfter: 4 };
-      let allowedSq = boardComponent(currentShip).getByTestId("square6");
-      fireEvent.drop(allowedSq);
-      let result = allowedSq.classList.contains("friendly-sq");
-      expect(result).toEqual(false);
+      let boardComponent = setupBoard(currentShip);
+      let sqDestination = boardComponent.getByTestId(`square6_player`);
+      fireEvent.drop(sqDestination);
+
+      let noOccupiedSquares = [0, 1, 2, 3, 4, 5, 6].every((index) => {
+        let sq = boardComponent.getByTestId(`square${index}_player`);
+        return sq.classList.contains("friendly-sq") === false;
+      });
+
+      expect(noOccupiedSquares).toEqual(true);
     });
   });
 
   describe("horizontal carrier by its last square", () => {
     test("onto board[6, 0] is disallowed", () => {
       let currentShip = { name: "carrier", index: 5, squaresBefore: 4, squaresAfter: 0 };
-      let allowedSq = boardComponent(currentShip).getByTestId("square60");
-      fireEvent.drop(allowedSq);
-      let result = allowedSq.classList.contains("friendly-sq");
-      expect(result).toEqual(false);
+      let boardComponent = setupBoard(currentShip);
+      let sqDestination = boardComponent.getByTestId(`square60_player`);
+      fireEvent.drop(sqDestination);
+
+      let noOccupiedSquares = [0, 1, 2, 3, 4, 5, 6].every((index) => {
+        let sq = boardComponent.getByTestId(`square${index}_player`);
+        return sq.classList.contains("friendly-sq") === false;
+      });
+
+      expect(noOccupiedSquares).toEqual(true);
     });
 
     test("onto board[6, 6] is allowed", () => {
       let currentShip = { name: "carrier", index: 5, squaresBefore: 4, squaresAfter: 0 };
-      let allowedSq = boardComponent(currentShip).getByTestId("square66");
+      let allowedSq = setupBoard(currentShip).getByTestId(`square66_player`);
       fireEvent.drop(allowedSq);
       let result = allowedSq.classList.contains("friendly-sq");
       expect(result).toEqual(true);
