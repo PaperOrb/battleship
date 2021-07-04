@@ -11,7 +11,7 @@ export default function ShipPicker() {
 
     let sqsAfter = length - clickedShipSq;
     let sqsBefore = clickedShipSq - 1;
-    let ship = { name: e.target.id, index: clickedShipSq, squaresBefore: sqsBefore, squaresAfter: sqsAfter };
+    let ship = { name: e.target.id, index: clickedShipSq, aftSquares: sqsBefore, foreSquares: sqsAfter };
     setCurrentShip(ship);
   };
 

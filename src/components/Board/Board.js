@@ -9,10 +9,10 @@ export default function Board({ ownerProp, visibility }) {
   // set movable squares when a ship is selected
   useEffect(() => {
     let sqIsMovable = (boardEle) => {
-      let xRightSideCoord = boardEle.coords[1] + currentShip.squaresAfter;
-      let xLeftSideCoord = boardEle.coords[1] - currentShip.squaresBefore;
-      let yBottomSideCoord = boardEle.coords[1] + currentShip.squaresAfter;
-      let yTopSideCoord = boardEle.coords[1] - currentShip.squaresBefore;
+      let xRightSideCoord = boardEle.coords[1] + currentShip.foreSquares;
+      let xLeftSideCoord = boardEle.coords[1] - currentShip.aftSquares;
+      let yBottomSideCoord = boardEle.coords[1] + currentShip.foreSquares;
+      let yTopSideCoord = boardEle.coords[1] - currentShip.aftSquares;
 
       if (xRightSideCoord < boardSize && xLeftSideCoord > -1) {
         // update with a dynamic condition for determining if sqIsMovable
@@ -65,10 +65,10 @@ export default function Board({ ownerProp, visibility }) {
     e.preventDefault();
   };
 
-  let generateShipCoords = (copyOfClickedShipSq, squaresCount, shipDirection, squaresBeforeOrAfter) => {
+  let generateShipCoords = (copyOfClickedShipSq, squaresCount, shipDirection, aftOrForeSquares) => {
     let occupiedSquares = [];
     for (; squaresCount > 0; --squaresCount) {
-      copyOfClickedShipSq[shipDirection] += squaresBeforeOrAfter;
+      copyOfClickedShipSq[shipDirection] += aftOrForeSquares;
       occupiedSquares.push([...copyOfClickedShipSq]);
     }
     return occupiedSquares;
@@ -83,8 +83,8 @@ export default function Board({ ownerProp, visibility }) {
     if (board[row][col].isMovable === false) return;
 
     let shipDirection = 1;
-    let aftSquares = generateShipCoords([...clickedShipSquare], currentShip.squaresBefore, shipDirection, -1);
-    let foreSquares = generateShipCoords([...clickedShipSquare], currentShip.squaresAfter, shipDirection, 1);
+    let aftSquares = generateShipCoords([...clickedShipSquare], currentShip.aftSquares, shipDirection, -1);
+    let foreSquares = generateShipCoords([...clickedShipSquare], currentShip.foreSquares, shipDirection, 1);
     let occupiedShipSquares = [[...clickedShipSquare]].concat(aftSquares.concat(foreSquares));
 
     updateBoard((boardEle) => {

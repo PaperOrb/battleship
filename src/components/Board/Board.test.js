@@ -23,7 +23,7 @@ describe("drag & drop", () => {
   describe("horizontal carrier by its first square", () => {
     let currentShip;
     beforeEach(() => {
-      currentShip = { name: "carrier", index: 1, squaresBefore: 0, squaresAfter: 4 };
+      currentShip = { name: "carrier", index: 1, aftSquares: 0, foreSquares: 4 };
     });
 
     test("onto board[0, 0] is allowed", () => {
@@ -40,7 +40,7 @@ describe("drag & drop", () => {
     });
 
     test("onto board[0, 6] is disallowed", () => {
-      let currentShip = { name: "carrier", index: 1, squaresBefore: 0, squaresAfter: 4 };
+      let currentShip = { name: "carrier", index: 1, aftSquares: 0, foreSquares: 4 };
       let boardComponent = setupBoard(currentShip);
       let sqDestination = boardComponent.getByTestId(`square6_player`);
       fireEvent.drop(sqDestination);
@@ -57,7 +57,7 @@ describe("drag & drop", () => {
   describe("horizontal carrier by its last square", () => {
     let currentShip;
     beforeEach(() => {
-      currentShip = { name: "carrier", index: 5, squaresBefore: 4, squaresAfter: 0 };
+      currentShip = { name: "carrier", index: 5, aftSquares: 4, foreSquares: 0 };
     });
 
     test("onto board[6, 0] is disallowed", () => {
@@ -90,7 +90,7 @@ describe("drag & drop", () => {
   describe("horizontal carrier by its middle square", () => {
     let currentShip;
     beforeEach(() => {
-      currentShip = { name: "carrier", index: 3, squaresBefore: 2, squaresAfter: 2 };
+      currentShip = { name: "carrier", index: 3, aftSquares: 2, foreSquares: 2 };
     });
 
     test("onto board[0, 0] is disallowed", () => {
