@@ -128,7 +128,6 @@ describe("drag & drop", () => {
         let sq = boardComponent.getByTestId(`square${index}_player`);
         return sq.classList.contains("friendly-sq") === true;
       });
-      console.log(result);
 
       expect(result).toEqual([false, true, true, true, true, true, false]);
     });

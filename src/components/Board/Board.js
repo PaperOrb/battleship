@@ -74,16 +74,17 @@ export default function Board({ ownerProp, visibility }) {
     if (board[row][col].isMovable === false) return;
 
     let index = 1;
-    let shipSquares = [JSON.parse(JSON.stringify(domCoordsInt))];
+    let shipSquares = [[...domCoordsInt]];
 
     for (let times = currentShip.squaresBefore; times > 0; --times) {
       domCoordsInt[index] -= 1;
-      shipSquares.push(JSON.parse(JSON.stringify(domCoordsInt)));
+      shipSquares.push([...domCoordsInt]);
     }
 
     for (let times = currentShip.squaresAfter; times > 0; --times) {
       domCoordsInt[index] += 1;
-      shipSquares.push(JSON.parse(JSON.stringify(domCoordsInt)));
+
+      shipSquares.push([...domCoordsInt]);
     }
 
     updateBoard((boardEle) => {
