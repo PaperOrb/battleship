@@ -21,19 +21,22 @@ describe("drag & drop", () => {
   // });
 
   describe("horizontal carrier by its first square", () => {
+    let currentShip;
+    beforeEach(() => {
+      currentShip = { name: "carrier", index: 1, squaresBefore: 0, squaresAfter: 4 };
+    });
+
     test("onto board[0, 0] is allowed", () => {
-      let currentShip = { name: "carrier", index: 1, squaresBefore: 0, squaresAfter: 4 };
       let boardComponent = setupBoard(currentShip);
       let sqDestination = boardComponent.getByTestId(`square0_player`);
       fireEvent.drop(sqDestination);
 
-      let occupiedSquares = [0, 1, 2, 3, 4, 5, 6].map((index) => {
+      let result = [0, 1, 2, 3, 4, 5, 6].map((index) => {
         let sq = boardComponent.getByTestId(`square${index}_player`);
         return sq.classList.contains("friendly-sq");
       });
 
-      let correctOccupiedSquares = JSON.stringify([true, true, true, true, true, false, false]);
-      expect(JSON.stringify(occupiedSquares)).toEqual(correctOccupiedSquares);
+      expect(result).toEqual([true, true, true, true, true, false, false]);
     });
 
     test("onto board[0, 6] is disallowed", () => {
@@ -52,8 +55,45 @@ describe("drag & drop", () => {
   });
 
   describe("horizontal carrier by its last square", () => {
+    let currentShip;
+    beforeEach(() => {
+      currentShip = { name: "carrier", index: 5, squaresBefore: 4, squaresAfter: 0 };
+    });
+
     test("onto board[6, 0] is disallowed", () => {
-      let currentShip = { name: "carrier", index: 5, squaresBefore: 4, squaresAfter: 0 };
+      let boardComponent = setupBoard(currentShip);
+      let sqDestination = boardComponent.getByTestId(`square60_player`);
+      fireEvent.drop(sqDestination);
+
+      let noOccupiedSquares = [0, 1, 2, 3, 4, 5, 6].every((index) => {
+        let sq = boardComponent.getByTestId(`square6${index}_player`);
+        return sq.classList.contains("friendly-sq") === false;
+      });
+
+      expect(noOccupiedSquares).toEqual(true);
+    });
+
+    test("onto board[6, 6] is allowed", () => {
+      let boardComponent = setupBoard(currentShip);
+      let sqDestination = boardComponent.getByTestId(`square66_player`);
+      fireEvent.drop(sqDestination);
+
+      let result = [0, 1, 2, 3, 4, 5, 6].map((index) => {
+        let sq = boardComponent.getByTestId(`square6${index}_player`);
+        return sq.classList.contains("friendly-sq") === true;
+      });
+
+      expect(result).toEqual([false, false, true, true, true, true, true]);
+    });
+  });
+
+  describe("horizontal carrier by its middle square", () => {
+    let currentShip;
+    beforeEach(() => {
+      currentShip = { name: "carrier", index: 3, squaresBefore: 2, squaresAfter: 2 };
+    });
+
+    test("onto board[0, 0] is disallowed", () => {
       let boardComponent = setupBoard(currentShip);
       let sqDestination = boardComponent.getByTestId(`square60_player`);
       fireEvent.drop(sqDestination);
@@ -66,12 +106,31 @@ describe("drag & drop", () => {
       expect(noOccupiedSquares).toEqual(true);
     });
 
-    test("onto board[6, 6] is allowed", () => {
-      let currentShip = { name: "carrier", index: 5, squaresBefore: 4, squaresAfter: 0 };
-      let allowedSq = setupBoard(currentShip).getByTestId(`square66_player`);
-      fireEvent.drop(allowedSq);
-      let result = allowedSq.classList.contains("friendly-sq");
-      expect(result).toEqual(true);
+    test("onto board[6, 6] is disallowed", () => {
+      let boardComponent = setupBoard(currentShip);
+      let sqDestination = boardComponent.getByTestId(`square60_player`);
+      fireEvent.drop(sqDestination);
+
+      let noOccupiedSquares = [0, 1, 2, 3, 4, 5, 6].every((index) => {
+        let sq = boardComponent.getByTestId(`square6${index}_player`);
+        return sq.classList.contains("friendly-sq") === false;
+      });
+
+      expect(noOccupiedSquares).toEqual(true);
+    });
+
+    test("onto board[0, 3] is allowed", () => {
+      let boardComponent = setupBoard(currentShip);
+      let sqDestination = boardComponent.getByTestId(`square3_player`);
+      fireEvent.drop(sqDestination);
+
+      let result = [0, 1, 2, 3, 4, 5, 6].map((index) => {
+        let sq = boardComponent.getByTestId(`square${index}_player`);
+        return sq.classList.contains("friendly-sq") === true;
+      });
+      console.log(result);
+
+      expect(result).toEqual([false, true, true, true, true, true, false]);
     });
   });
 });
