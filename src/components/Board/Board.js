@@ -65,30 +65,46 @@ export default function Board({ ownerProp, visibility }) {
     e.preventDefault();
   };
 
+  let updateOccupiedShipSquares = (
+    copyOfClickedShipSq,
+    squaresCount,
+    shipDirection,
+    occupiedShipSquaresArr,
+    squaresBeforeOrAfter
+  ) => {
+    for (; squaresCount > 0; --squaresCount) {
+      copyOfClickedShipSq[shipDirection] += squaresBeforeOrAfter;
+      occupiedShipSquaresArr.push([...copyOfClickedShipSq]);
+    }
+  };
+
   let placeShip = (e) => {
     e.preventDefault();
-    let domCoordsString = e.target.getAttribute("data-coords");
-    let domCoordsInt = JSON.parse(domCoordsString);
-    let row = domCoordsInt[0];
-    let col = domCoordsInt[1];
+    let clickedShipSquareStr = e.target.getAttribute("data-coords");
+    let clickedShipSquareArr = JSON.parse(clickedShipSquareStr);
+    let row = clickedShipSquareArr[0];
+    let col = clickedShipSquareArr[1];
     if (board[row][col].isMovable === false) return;
 
-    let index = 1;
-    let shipSquares = [[...domCoordsInt]];
-
-    for (let times = currentShip.squaresBefore; times > 0; --times) {
-      domCoordsInt[index] -= 1;
-      shipSquares.push([...domCoordsInt]);
-    }
-
-    for (let times = currentShip.squaresAfter; times > 0; --times) {
-      domCoordsInt[index] += 1;
-
-      shipSquares.push([...domCoordsInt]);
-    }
+    let shipDirection = 1;
+    let occupiedShipSquares = [[...clickedShipSquareArr]];
+    updateOccupiedShipSquares(
+      [...clickedShipSquareArr],
+      currentShip.squaresBefore,
+      shipDirection,
+      occupiedShipSquares,
+      -1
+    );
+    updateOccupiedShipSquares(
+      [...clickedShipSquareArr],
+      currentShip.squaresAfter,
+      shipDirection,
+      occupiedShipSquares,
+      1
+    );
 
     updateBoard((boardEle) => {
-      shipSquares.forEach((domCoordInt) => {
+      occupiedShipSquares.forEach((domCoordInt) => {
         let coordString = JSON.stringify(domCoordInt);
         if (JSON.stringify(boardEle.coords) === coordString) boardEle.isShip = true; // only setting isShip 3 times?
       });
