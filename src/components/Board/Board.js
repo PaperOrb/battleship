@@ -65,43 +65,27 @@ export default function Board({ ownerProp, visibility }) {
     e.preventDefault();
   };
 
-  let updateOccupiedShipSquares = (
-    copyOfClickedShipSq,
-    squaresCount,
-    shipDirection,
-    occupiedShipSquaresArr,
-    squaresBeforeOrAfter
-  ) => {
+  let generateShipCoords = (copyOfClickedShipSq, squaresCount, shipDirection, squaresBeforeOrAfter) => {
+    let occupiedSquares = [];
     for (; squaresCount > 0; --squaresCount) {
       copyOfClickedShipSq[shipDirection] += squaresBeforeOrAfter;
-      occupiedShipSquaresArr.push([...copyOfClickedShipSq]);
+      occupiedSquares.push([...copyOfClickedShipSq]);
     }
+    return occupiedSquares;
   };
 
   let placeShip = (e) => {
     e.preventDefault();
     let clickedShipSquareStr = e.target.getAttribute("data-coords");
-    let clickedShipSquareArr = JSON.parse(clickedShipSquareStr);
-    let row = clickedShipSquareArr[0];
-    let col = clickedShipSquareArr[1];
+    let clickedShipSquare = JSON.parse(clickedShipSquareStr);
+    let row = clickedShipSquare[0];
+    let col = clickedShipSquare[1];
     if (board[row][col].isMovable === false) return;
 
     let shipDirection = 1;
-    let occupiedShipSquares = [[...clickedShipSquareArr]];
-    updateOccupiedShipSquares(
-      [...clickedShipSquareArr],
-      currentShip.squaresBefore,
-      shipDirection,
-      occupiedShipSquares,
-      -1
-    );
-    updateOccupiedShipSquares(
-      [...clickedShipSquareArr],
-      currentShip.squaresAfter,
-      shipDirection,
-      occupiedShipSquares,
-      1
-    );
+    let aftSquares = generateShipCoords([...clickedShipSquare], currentShip.squaresBefore, shipDirection, -1);
+    let foreSquares = generateShipCoords([...clickedShipSquare], currentShip.squaresAfter, shipDirection, 1);
+    let occupiedShipSquares = [[...clickedShipSquare]].concat(aftSquares.concat(foreSquares));
 
     updateBoard((boardEle) => {
       occupiedShipSquares.forEach((domCoordInt) => {
