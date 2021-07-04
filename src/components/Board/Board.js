@@ -9,13 +9,13 @@ export default function Board({ ownerProp, visibility }) {
   // set movable squares when a ship is selected
   useEffect(() => {
     let sqIsMovable = (boardEle) => {
-      let xRightSideCoord = boardEle.coords[1] + currentShip.foreSquares;
-      let xLeftSideCoord = boardEle.coords[1] - currentShip.aftSquares;
-      let yBottomSideCoord = boardEle.coords[1] + currentShip.foreSquares;
-      let yTopSideCoord = boardEle.coords[1] - currentShip.aftSquares;
+      let rightMostShipSq = boardEle.coords[1] + currentShip.foreSquares;
+      let leftMostShipSq = boardEle.coords[1] - currentShip.aftSquares;
+      let bottomMostShipSq = boardEle.coords[0] + currentShip.foreSquares;
+      let topMostShipSq = boardEle.coords[0] - currentShip.aftSquares;
 
-      if (xRightSideCoord < boardSize && xLeftSideCoord > -1) {
-        // update with a dynamic condition for determining if sqIsMovable
+      if (rightMostShipSq < boardSize && leftMostShipSq > -1) {
+        // refactor with dynamic condition so squares are movable if ship is vertical
         boardEle.isMovable = true;
       } else {
         boardEle.isMovable = false;
@@ -82,7 +82,7 @@ export default function Board({ ownerProp, visibility }) {
     let col = clickedShipSquare[1];
     if (board[row][col].isMovable === false) return;
 
-    let shipDirection = 1;
+    let shipDirection = 1; // refactor so ships can be placed vertically
     let aftSquares = generateShipCoords([...clickedShipSquare], currentShip.aftSquares, shipDirection, -1);
     let foreSquares = generateShipCoords([...clickedShipSquare], currentShip.foreSquares, shipDirection, 1);
     let occupiedShipSquares = [[...clickedShipSquare]].concat(aftSquares.concat(foreSquares));
