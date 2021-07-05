@@ -82,7 +82,7 @@ export default function Board({ ownerProp, visibility }) {
     let col = clickedShipSquare[1];
     if (board[row][col].isMovable === false) return;
 
-    let shipDirection = 1; // refactor so ships can be placed vertically
+    let shipDirection = 1; // implement ship directionality in GUI, and then wire that into placeShip and the currentShip useEffect
     let aftSquares = generateShipCoords([...clickedShipSquare], currentShip.aftSquares, shipDirection, -1);
     let foreSquares = generateShipCoords([...clickedShipSquare], currentShip.foreSquares, shipDirection, 1);
     let occupiedShipSquares = [[...clickedShipSquare]].concat(aftSquares.concat(foreSquares));
