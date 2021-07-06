@@ -3,7 +3,7 @@ import { ShipContext } from "../../App";
 
 export default function ShipPicker() {
   const { currentShip, setCurrentShip } = useContext(ShipContext);
-  const [orientation, setOrientation] = useState(1); // 1 = horizontal ship, 0 = vertical
+  const [orientation, setOrientation] = useState("horizontal");
 
   // sets ship object when a ship is dragged/clicked
   let setupShip = (e) => {
@@ -17,9 +17,8 @@ export default function ShipPicker() {
       index: clickedShipSq,
       aftSquares: sqsBefore,
       foreSquares: sqsAfter,
-      shipDirection: orientation,
+      direction: orientation,
     };
-    console.log(ship);
 
     setCurrentShip(ship);
   };
@@ -48,11 +47,12 @@ export default function ShipPicker() {
   };
 
   let toggleOrientation = () => {
-    setOrientation((prevOrientation) => (prevOrientation = 1 - prevOrientation));
+    setOrientation((prevOrientation) => {
+      return prevOrientation === "vertical" ? "horizontal" : "vertical";
+    });
     let carriers = document.getElementsByClassName("carrier-container");
     let shipPicker = document.querySelector(".ship-picker");
     Array.from(carriers).forEach((carrier) => {
-      // console.log(carrier);
       carrier.classList.toggle("grid-template-columns");
       carrier.classList.toggle("grid-template-rows");
     });

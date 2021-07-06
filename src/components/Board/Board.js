@@ -9,13 +9,17 @@ export default function Board({ ownerProp, visibility }) {
   // set movable squares when a ship is selected
   useEffect(() => {
     let sqIsMovable = (boardEle) => {
-      let rightMostShipSq = boardEle.coords[1] + currentShip.foreSquares;
-      let leftMostShipSq = boardEle.coords[1] - currentShip.aftSquares;
-      let bottomMostShipSq = boardEle.coords[0] + currentShip.foreSquares;
-      let topMostShipSq = boardEle.coords[0] - currentShip.aftSquares;
+      let foreMostShipSquare;
+      let aftMostShipSquare;
+      if (currentShip.direction === "horizontal") {
+        foreMostShipSquare = boardEle.coords[1] + currentShip.foreSquares;
+        aftMostShipSquare = boardEle.coords[1] - currentShip.aftSquares;
+      } else {
+        foreMostShipSquare = boardEle.coords[0] + currentShip.foreSquares;
+        aftMostShipSquare = boardEle.coords[0] - currentShip.aftSquares;
+      }
 
-      if (rightMostShipSq < boardSize && leftMostShipSq > -1) {
-        // refactor with dynamic condition so squares are movable if ship is vertical
+      if (foreMostShipSquare < boardSize && aftMostShipSquare > -1) {
         boardEle.isMovable = true;
       } else {
         boardEle.isMovable = false;
@@ -66,9 +70,10 @@ export default function Board({ ownerProp, visibility }) {
   };
 
   let generateShipCoords = (copyOfClickedShipSq, squaresCount, shipDirection, aftOrForeSquares) => {
+    let direction = shipDirection === "horizontal" ? 1 : 0;
     let occupiedSquares = [];
     for (; squaresCount > 0; --squaresCount) {
-      copyOfClickedShipSq[shipDirection] += aftOrForeSquares;
+      copyOfClickedShipSq[direction] += aftOrForeSquares;
       occupiedSquares.push([...copyOfClickedShipSq]);
     }
     return occupiedSquares;
@@ -83,8 +88,8 @@ export default function Board({ ownerProp, visibility }) {
     if (board[row][col].isMovable === false) return;
 
     let shipDirection = 1; // implement ship directionality in GUI, and then wire that into placeShip and the currentShip useEffect
-    let aftSquares = generateShipCoords([...clickedShipSquare], currentShip.aftSquares, shipDirection, -1);
-    let foreSquares = generateShipCoords([...clickedShipSquare], currentShip.foreSquares, shipDirection, 1);
+    let aftSquares = generateShipCoords([...clickedShipSquare], currentShip.aftSquares, currentShip.direction, -1);
+    let foreSquares = generateShipCoords([...clickedShipSquare], currentShip.foreSquares, currentShip.direction, 1);
     let occupiedShipSquares = [[...clickedShipSquare]].concat(aftSquares.concat(foreSquares));
 
     updateBoard((boardEle) => {
