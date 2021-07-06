@@ -254,4 +254,387 @@ describe("drag & drop", () => {
       expect(noOccupiedSquares).toEqual(true);
     });
   });
+
+  describe("horizontal battleship by its first square", () => {
+    let currentShip;
+    beforeEach(() => {
+      currentShip = { name: "battleship", index: 4, aftSquares: 0, foreSquares: 3, direction: "horizontal" };
+    });
+
+    test("onto occupied spot is disallowed", () => {
+      let boardComponent = setupBoard(currentShip);
+      let occupiedSpot = boardComponent.getByTestId(`square1_player`);
+      fireEvent.drop(occupiedSpot);
+
+      let sqDestination = boardComponent.getByTestId(`square0_player`);
+      fireEvent.drop(sqDestination);
+
+      let notPlaced = sqDestination.classList.contains("friendly-sq") === false;
+
+      expect(notPlaced).toEqual(true);
+    });
+
+    test("onto board[0, 0] is allowed", () => {
+      let boardComponent = setupBoard(currentShip);
+      let sqDestination = boardComponent.getByTestId(`square0_player`);
+      fireEvent.drop(sqDestination);
+
+      let result = [0, 1, 2, 3, 4, 5, 6].map((index) => {
+        let boardPos = index === 0 ? `square${index}_player` : `square${index}_player`;
+        let sq = boardComponent.getByTestId(boardPos);
+        return sq.classList.contains("friendly-sq");
+      });
+
+      expect(result).toEqual([true, true, true, true, false, false, false]);
+    });
+
+    test("onto board[0, 6] is disallowed", () => {
+      let boardComponent = setupBoard(currentShip);
+      let sqDestination = boardComponent.getByTestId(`square6_player`);
+      fireEvent.drop(sqDestination);
+
+      let noOccupiedSquares = [0, 1, 2, 3, 4, 5, 6].every((index) => {
+        let boardPos = index === 0 ? `square${index}_player` : `square${index}0_player`;
+        let sq = boardComponent.getByTestId(boardPos);
+        return sq.classList.contains("friendly-sq") === false;
+      });
+
+      expect(noOccupiedSquares).toEqual(true);
+    });
+  });
+
+  describe("vertical battleship by its last square", () => {
+    let currentShip;
+    beforeEach(() => {
+      currentShip = { name: "battleship", index: 4, aftSquares: 3, foreSquares: 0, direction: "vertical" };
+    });
+
+    test("onto occupied spot is disallowed", () => {
+      let boardComponent = setupBoard(currentShip);
+      let occupiedSpot = boardComponent.getByTestId(`square30_player`);
+      fireEvent.drop(occupiedSpot);
+
+      let sqDestination = boardComponent.getByTestId(`square40_player`);
+      fireEvent.drop(sqDestination);
+
+      let notPlaced = sqDestination.classList.contains("friendly-sq") === false;
+
+      expect(notPlaced).toEqual(true);
+    });
+
+    test("onto board[6, 0] is allowed", () => {
+      let boardComponent = setupBoard(currentShip);
+      let sqDestination = boardComponent.getByTestId(`square60_player`);
+      fireEvent.drop(sqDestination);
+
+      let result = [0, 1, 2, 3, 4, 5, 6].map((index) => {
+        let boardPos = index === 0 ? `square${index}_player` : `square${index}0_player`;
+        let sq = boardComponent.getByTestId(boardPos);
+        return sq.classList.contains("friendly-sq");
+      });
+
+      expect(result).toEqual([false, false, false, true, true, true, true]);
+    });
+
+    test("onto board[0, 6] is disallowed", () => {
+      let boardComponent = setupBoard(currentShip);
+      let sqDestination = boardComponent.getByTestId(`square6_player`);
+      fireEvent.drop(sqDestination);
+
+      let noOccupiedSquares = [0, 1, 2, 3, 4, 5, 6].every((index) => {
+        let boardPos = index === 0 ? `square${index}_player` : `square${index}0_player`;
+        let sq = boardComponent.getByTestId(boardPos);
+        return sq.classList.contains("friendly-sq") === false;
+      });
+
+      expect(noOccupiedSquares).toEqual(true);
+    });
+  });
+  describe("horizontal submarine by its first square", () => {
+    let currentShip;
+    beforeEach(() => {
+      currentShip = { name: "submarine", index: 3, aftSquares: 0, foreSquares: 2, direction: "horizontal" };
+    });
+
+    test("onto occupied spot is disallowed", () => {
+      let boardComponent = setupBoard(currentShip);
+      let occupiedSpot = boardComponent.getByTestId(`square2_player`);
+      fireEvent.drop(occupiedSpot);
+
+      let sqDestination = boardComponent.getByTestId(`square1_player`);
+      fireEvent.drop(sqDestination);
+
+      let notPlaced = sqDestination.classList.contains("friendly-sq") === false;
+
+      expect(notPlaced).toEqual(true);
+    });
+
+    test("onto board[0, 0] is allowed", () => {
+      let boardComponent = setupBoard(currentShip);
+      let sqDestination = boardComponent.getByTestId(`square0_player`);
+      fireEvent.drop(sqDestination);
+
+      let result = [0, 1, 2, 3, 4, 5, 6].map((index) => {
+        let boardPos = index === 0 ? `square${index}_player` : `square${index}_player`;
+        let sq = boardComponent.getByTestId(boardPos);
+        return sq.classList.contains("friendly-sq");
+      });
+
+      expect(result).toEqual([true, true, true, false, false, false, false]);
+    });
+
+    test("onto board[0, 6] is disallowed", () => {
+      let boardComponent = setupBoard(currentShip);
+      let sqDestination = boardComponent.getByTestId(`square6_player`);
+      fireEvent.drop(sqDestination);
+
+      let noOccupiedSquares = [0, 1, 2, 3, 4, 5, 6].every((index) => {
+        let boardPos = index === 0 ? `square${index}_player` : `square${index}0_player`;
+        let sq = boardComponent.getByTestId(boardPos);
+        return sq.classList.contains("friendly-sq") === false;
+      });
+
+      expect(noOccupiedSquares).toEqual(true);
+    });
+  });
+
+  describe("vertical submarine by its last square", () => {
+    let currentShip;
+    beforeEach(() => {
+      currentShip = { name: "submarine", index: 3, aftSquares: 2, foreSquares: 0, direction: "vertical" };
+    });
+
+    test("onto occupied spot is disallowed", () => {
+      let boardComponent = setupBoard(currentShip);
+      let occupiedSpot = boardComponent.getByTestId(`square20_player`);
+      fireEvent.drop(occupiedSpot);
+
+      let sqDestination = boardComponent.getByTestId(`square30_player`);
+      fireEvent.drop(sqDestination);
+
+      let notPlaced = sqDestination.classList.contains("friendly-sq") === false;
+
+      expect(notPlaced).toEqual(true);
+    });
+
+    test("onto board[6, 0] is allowed", () => {
+      let boardComponent = setupBoard(currentShip);
+      let sqDestination = boardComponent.getByTestId(`square60_player`);
+      fireEvent.drop(sqDestination);
+
+      let result = [0, 1, 2, 3, 4, 5, 6].map((index) => {
+        let boardPos = index === 0 ? `square${index}_player` : `square${index}0_player`;
+        let sq = boardComponent.getByTestId(boardPos);
+        return sq.classList.contains("friendly-sq");
+      });
+
+      expect(result).toEqual([false, false, false, false, true, true, true]);
+    });
+
+    test("onto board[0, 6] is disallowed", () => {
+      let boardComponent = setupBoard(currentShip);
+      let sqDestination = boardComponent.getByTestId(`square6_player`);
+      fireEvent.drop(sqDestination);
+
+      let noOccupiedSquares = [0, 1, 2, 3, 4, 5, 6].every((index) => {
+        let boardPos = index === 0 ? `square${index}_player` : `square${index}0_player`;
+        let sq = boardComponent.getByTestId(boardPos);
+        return sq.classList.contains("friendly-sq") === false;
+      });
+
+      expect(noOccupiedSquares).toEqual(true);
+    });
+  });
+
+  describe("horizontal destroyer by its first square", () => {
+    let currentShip;
+    beforeEach(() => {
+      currentShip = { name: "destroyer", index: 3, aftSquares: 0, foreSquares: 2, direction: "horizontal" };
+    });
+
+    test("onto occupied spot is disallowed", () => {
+      let boardComponent = setupBoard(currentShip);
+      let occupiedSpot = boardComponent.getByTestId(`square2_player`);
+      fireEvent.drop(occupiedSpot);
+
+      let sqDestination = boardComponent.getByTestId(`square1_player`);
+      fireEvent.drop(sqDestination);
+
+      let notPlaced = sqDestination.classList.contains("friendly-sq") === false;
+
+      expect(notPlaced).toEqual(true);
+    });
+
+    test("onto board[0, 0] is allowed", () => {
+      let boardComponent = setupBoard(currentShip);
+      let sqDestination = boardComponent.getByTestId(`square0_player`);
+      fireEvent.drop(sqDestination);
+
+      let result = [0, 1, 2, 3, 4, 5, 6].map((index) => {
+        let boardPos = index === 0 ? `square${index}_player` : `square${index}_player`;
+        let sq = boardComponent.getByTestId(boardPos);
+        return sq.classList.contains("friendly-sq");
+      });
+
+      expect(result).toEqual([true, true, true, false, false, false, false]);
+    });
+
+    test("onto board[0, 6] is disallowed", () => {
+      let boardComponent = setupBoard(currentShip);
+      let sqDestination = boardComponent.getByTestId(`square6_player`);
+      fireEvent.drop(sqDestination);
+
+      let noOccupiedSquares = [0, 1, 2, 3, 4, 5, 6].every((index) => {
+        let boardPos = index === 0 ? `square${index}_player` : `square${index}0_player`;
+        let sq = boardComponent.getByTestId(boardPos);
+        return sq.classList.contains("friendly-sq") === false;
+      });
+
+      expect(noOccupiedSquares).toEqual(true);
+    });
+  });
+
+  describe("vertical destroyer by its last square", () => {
+    let currentShip;
+    beforeEach(() => {
+      currentShip = { name: "destroyer", index: 3, aftSquares: 2, foreSquares: 0, direction: "vertical" };
+    });
+
+    test("onto occupied spot is disallowed", () => {
+      let boardComponent = setupBoard(currentShip);
+      let occupiedSpot = boardComponent.getByTestId(`square20_player`);
+      fireEvent.drop(occupiedSpot);
+
+      let sqDestination = boardComponent.getByTestId(`square30_player`);
+      fireEvent.drop(sqDestination);
+
+      let notPlaced = sqDestination.classList.contains("friendly-sq") === false;
+
+      expect(notPlaced).toEqual(true);
+    });
+
+    test("onto board[6, 0] is allowed", () => {
+      let boardComponent = setupBoard(currentShip);
+      let sqDestination = boardComponent.getByTestId(`square60_player`);
+      fireEvent.drop(sqDestination);
+
+      let result = [0, 1, 2, 3, 4, 5, 6].map((index) => {
+        let boardPos = index === 0 ? `square${index}_player` : `square${index}0_player`;
+        let sq = boardComponent.getByTestId(boardPos);
+        return sq.classList.contains("friendly-sq");
+      });
+
+      expect(result).toEqual([false, false, false, false, true, true, true]);
+    });
+
+    test("onto board[0, 6] is disallowed", () => {
+      let boardComponent = setupBoard(currentShip);
+      let sqDestination = boardComponent.getByTestId(`square6_player`);
+      fireEvent.drop(sqDestination);
+
+      let noOccupiedSquares = [0, 1, 2, 3, 4, 5, 6].every((index) => {
+        let boardPos = index === 0 ? `square${index}_player` : `square${index}0_player`;
+        let sq = boardComponent.getByTestId(boardPos);
+        return sq.classList.contains("friendly-sq") === false;
+      });
+
+      expect(noOccupiedSquares).toEqual(true);
+    });
+  });
+
+  describe("horizontal patrolboat by its first square", () => {
+    let currentShip;
+    beforeEach(() => {
+      currentShip = { name: "patrolboat", index: 3, aftSquares: 0, foreSquares: 2, direction: "horizontal" };
+    });
+
+    test("onto board[0, 0] is allowed", () => {
+      let boardComponent = setupBoard(currentShip);
+      let sqDestination = boardComponent.getByTestId(`square0_player`);
+      fireEvent.drop(sqDestination);
+
+      let result = [0, 1, 2, 3, 4, 5, 6].map((index) => {
+        let boardPos = index === 0 ? `square${index}_player` : `square${index}_player`;
+        let sq = boardComponent.getByTestId(boardPos);
+        return sq.classList.contains("friendly-sq");
+      });
+
+      expect(result).toEqual([true, true, true, false, false, false, false]);
+    });
+
+    test("onto board[0, 6] is disallowed", () => {
+      let boardComponent = setupBoard(currentShip);
+      let sqDestination = boardComponent.getByTestId(`square6_player`);
+      fireEvent.drop(sqDestination);
+
+      let noOccupiedSquares = [0, 1, 2, 3, 4, 5, 6].every((index) => {
+        let boardPos = index === 0 ? `square${index}_player` : `square${index}0_player`;
+        let sq = boardComponent.getByTestId(boardPos);
+        return sq.classList.contains("friendly-sq") === false;
+      });
+
+      expect(noOccupiedSquares).toEqual(true);
+    });
+
+    test("onto occupied spot is disallowed", () => {
+      let boardComponent = setupBoard(currentShip);
+      let occupiedSpot = boardComponent.getByTestId(`square1_player`);
+      fireEvent.drop(occupiedSpot);
+
+      let sqDestination = boardComponent.getByTestId(`square0_player`);
+      fireEvent.drop(sqDestination);
+
+      let notPlaced = sqDestination.classList.contains("friendly-sq") === false;
+
+      expect(notPlaced).toEqual(true);
+    });
+  });
+
+  describe("vertical patrolboat by its last square", () => {
+    let currentShip;
+    beforeEach(() => {
+      currentShip = { name: "patrolboat", index: 2, aftSquares: 1, foreSquares: 0, direction: "vertical" };
+    });
+
+    test("onto board[6, 0] is allowed", () => {
+      let boardComponent = setupBoard(currentShip);
+      let sqDestination = boardComponent.getByTestId(`square60_player`);
+      fireEvent.drop(sqDestination);
+
+      let result = [0, 1, 2, 3, 4, 5, 6].map((index) => {
+        let boardPos = index === 0 ? `square${index}_player` : `square${index}0_player`;
+        let sq = boardComponent.getByTestId(boardPos);
+        return sq.classList.contains("friendly-sq");
+      });
+
+      expect(result).toEqual([false, false, false, false, false, true, true]);
+    });
+
+    test("onto board[0, 6] is disallowed", () => {
+      let boardComponent = setupBoard(currentShip);
+      let sqDestination = boardComponent.getByTestId(`square6_player`);
+      fireEvent.drop(sqDestination);
+
+      let noOccupiedSquares = [0, 1, 2, 3, 4, 5, 6].every((index) => {
+        let boardPos = index === 0 ? `square${index}_player` : `square${index}0_player`;
+        let sq = boardComponent.getByTestId(boardPos);
+        return sq.classList.contains("friendly-sq") === false;
+      });
+
+      expect(noOccupiedSquares).toEqual(true);
+    });
+
+    test("onto occupied spot is disallowed", () => {
+      let boardComponent = setupBoard(currentShip);
+      let occupiedSpot = boardComponent.getByTestId(`square10_player`);
+      fireEvent.drop(occupiedSpot);
+
+      let sqDestination = boardComponent.getByTestId(`square20_player`);
+      fireEvent.drop(sqDestination);
+
+      let notPlaced = sqDestination.classList.contains("friendly-sq") === false;
+
+      expect(notPlaced).toEqual(true);
+    });
+  });
 });

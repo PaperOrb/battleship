@@ -27,9 +27,7 @@ export default function ShipPicker() {
     return (
       <div className="ship-container grid-template-columns" onDragStart={dragShip} draggable="true">
         {[1, 2, 3, 4, 5].map((ele) => {
-          return (
-            <div key={ele} id="carrier" data-num={ele} data-length="5" onMouseDown={setupShip} className="ship"></div>
-          );
+          return <div key={ele} data-num={ele} data-length="5" onMouseDown={setupShip} className="ship"></div>;
         })}
       </div>
     );
@@ -39,9 +37,7 @@ export default function ShipPicker() {
     return (
       <div className="ship-container grid-template-columns" onDragStart={dragShip} draggable="true">
         {[1, 2, 3, 4].map((ele) => {
-          return (
-            <div key={ele} id="carrier" data-num={ele} data-length="4" onMouseDown={setupShip} className="ship"></div>
-          );
+          return <div key={ele} data-num={ele} data-length="4" onMouseDown={setupShip} className="ship"></div>;
         })}
       </div>
     );
@@ -51,9 +47,7 @@ export default function ShipPicker() {
     return (
       <div className="ship-container grid-template-columns" onDragStart={dragShip} draggable="true">
         {[1, 2, 3].map((ele) => {
-          return (
-            <div key={ele} id="carrier" data-num={ele} data-length="3" onMouseDown={setupShip} className="ship"></div>
-          );
+          return <div key={ele} data-num={ele} data-length="3" onMouseDown={setupShip} className="ship"></div>;
         })}
       </div>
     );
@@ -63,9 +57,7 @@ export default function ShipPicker() {
     return (
       <div className="ship-container grid-template-columns" onDragStart={dragShip} draggable="true">
         {[1, 2, 3].map((ele) => {
-          return (
-            <div key={ele} id="carrier" data-num={ele} data-length="3" onMouseDown={setupShip} className="ship"></div>
-          );
+          return <div key={ele} data-num={ele} data-length="3" onMouseDown={setupShip} className="ship"></div>;
         })}
       </div>
     );
@@ -75,9 +67,7 @@ export default function ShipPicker() {
     return (
       <div className="ship-container grid-template-columns" onDragStart={dragShip} draggable="true">
         {[1, 2].map((ele) => {
-          return (
-            <div key={ele} id="carrier" data-num={ele} data-length="2" onMouseDown={setupShip} className="ship"></div>
-          );
+          return <div key={ele} data-num={ele} data-length="2" onMouseDown={setupShip} className="ship"></div>;
         })}
       </div>
     );
