@@ -87,15 +87,21 @@ export default function Board({ ownerProp, visibility }) {
     let col = clickedShipSquare[1];
     if (board[row][col].isMovable === false) return;
 
-    let shipDirection = 1; // implement ship directionality in GUI, and then wire that into placeShip and the currentShip useEffect
     let aftSquares = generateShipCoords([...clickedShipSquare], currentShip.aftSquares, currentShip.direction, -1);
     let foreSquares = generateShipCoords([...clickedShipSquare], currentShip.foreSquares, currentShip.direction, 1);
     let occupiedShipSquares = [[...clickedShipSquare]].concat(aftSquares.concat(foreSquares));
+    let obstructions = occupiedShipSquares.some((domCoordInt) => {
+      let row = domCoordInt[0];
+      let col = domCoordInt[1];
+      return board[row][col].isShip === true;
+    });
+
+    if (obstructions) return;
 
     updateBoard((boardEle) => {
       occupiedShipSquares.forEach((domCoordInt) => {
         let coordString = JSON.stringify(domCoordInt);
-        if (JSON.stringify(boardEle.coords) === coordString) boardEle.isShip = true; // only setting isShip 3 times?
+        if (JSON.stringify(boardEle.coords) === coordString) boardEle.isShip = true;
       });
       return boardEle;
     });

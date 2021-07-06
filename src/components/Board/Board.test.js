@@ -43,6 +43,19 @@ describe("drag & drop", () => {
 
       expect(noOccupiedSquares).toEqual(true);
     });
+
+    test("onto occupied spot is disallowed", () => {
+      let boardComponent = setupBoard(currentShip);
+      let occupiedSpot = boardComponent.getByTestId(`square1_player`);
+      fireEvent.drop(occupiedSpot);
+
+      let sqDestination = boardComponent.getByTestId(`square0_player`);
+      fireEvent.drop(sqDestination);
+
+      let notPlaced = sqDestination.classList.contains("friendly-sq") === false;
+
+      expect(notPlaced).toEqual(true);
+    });
   });
 
   describe("horizontal carrier by its last square", () => {
@@ -156,6 +169,19 @@ describe("drag & drop", () => {
       });
 
       expect(noOccupiedSquares).toEqual(true);
+    });
+
+    test("onto occupied spot is disallowed", () => {
+      let boardComponent = setupBoard(currentShip);
+      let occupiedSpot = boardComponent.getByTestId(`square10_player`);
+      fireEvent.drop(occupiedSpot);
+
+      let sqDestination = boardComponent.getByTestId(`square0_player`);
+      fireEvent.drop(sqDestination);
+
+      let notPlaced = sqDestination.classList.contains("friendly-sq") === false;
+
+      expect(notPlaced).toEqual(true);
     });
   });
 
