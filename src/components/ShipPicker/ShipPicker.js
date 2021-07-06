@@ -25,17 +25,58 @@ export default function ShipPicker() {
 
   let carrier = () => {
     return (
-      <div className="carrier-container grid-template-columns" onDragStart={dragShip} draggable="true">
+      <div className="ship-container grid-template-columns" onDragStart={dragShip} draggable="true">
         {[1, 2, 3, 4, 5].map((ele) => {
           return (
-            <div
-              key={ele}
-              id="carrier"
-              data-num={ele}
-              data-length="5"
-              onMouseDown={setupShip}
-              className="carrier ship"
-            ></div>
+            <div key={ele} id="carrier" data-num={ele} data-length="5" onMouseDown={setupShip} className="ship"></div>
+          );
+        })}
+      </div>
+    );
+  };
+
+  let battleship = () => {
+    return (
+      <div className="ship-container grid-template-columns" onDragStart={dragShip} draggable="true">
+        {[1, 2, 3, 4].map((ele) => {
+          return (
+            <div key={ele} id="carrier" data-num={ele} data-length="4" onMouseDown={setupShip} className="ship"></div>
+          );
+        })}
+      </div>
+    );
+  };
+
+  let destroyer = () => {
+    return (
+      <div className="ship-container grid-template-columns" onDragStart={dragShip} draggable="true">
+        {[1, 2, 3].map((ele) => {
+          return (
+            <div key={ele} id="carrier" data-num={ele} data-length="3" onMouseDown={setupShip} className="ship"></div>
+          );
+        })}
+      </div>
+    );
+  };
+
+  let submarine = () => {
+    return (
+      <div className="ship-container grid-template-columns" onDragStart={dragShip} draggable="true">
+        {[1, 2, 3].map((ele) => {
+          return (
+            <div key={ele} id="carrier" data-num={ele} data-length="3" onMouseDown={setupShip} className="ship"></div>
+          );
+        })}
+      </div>
+    );
+  };
+
+  let patrolboat = () => {
+    return (
+      <div className="ship-container grid-template-columns" onDragStart={dragShip} draggable="true">
+        {[1, 2].map((ele) => {
+          return (
+            <div key={ele} id="carrier" data-num={ele} data-length="2" onMouseDown={setupShip} className="ship"></div>
           );
         })}
       </div>
@@ -50,11 +91,11 @@ export default function ShipPicker() {
     setOrientation((prevOrientation) => {
       return prevOrientation === "vertical" ? "horizontal" : "vertical";
     });
-    let carriers = document.getElementsByClassName("carrier-container");
+    let ships = document.getElementsByClassName("ship-container");
     let shipPicker = document.querySelector(".ship-picker");
-    Array.from(carriers).forEach((carrier) => {
-      carrier.classList.toggle("grid-template-columns");
-      carrier.classList.toggle("grid-template-rows");
+    Array.from(ships).forEach((ship) => {
+      ship.classList.toggle("grid-template-columns");
+      ship.classList.toggle("grid-template-rows");
     });
     shipPicker.classList.toggle("grid-template-columns");
     shipPicker.classList.toggle("grid-template-rows");
@@ -64,7 +105,10 @@ export default function ShipPicker() {
     <div>
       <div className="ship-picker grid-template-rows">
         {carrier()}
-        {carrier()}
+        {battleship()}
+        {submarine()}
+        {destroyer()}
+        {patrolboat()}
       </div>
       <div>
         <button className="orientation-btn" onClick={toggleOrientation}>

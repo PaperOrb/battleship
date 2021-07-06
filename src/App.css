@@ -76,21 +76,14 @@ html, body {
   grid-template-rows: repeat(7, 1fr);
 }
 
-.carrier-container {
+.ship-container {
   display: grid;
   gap: 3px;
 }
 
-.carrier {
+.ship {
   display: grid;
   background-color: blue;
-}
-
-.ship-container {
-  display: grid;
-  grid-area: 3fr;
-  height: 100%;
-  background-color: green;
 }
 
 .orientation-btn {
