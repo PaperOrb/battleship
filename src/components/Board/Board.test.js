@@ -1,11 +1,10 @@
 import { render, fireEvent } from "@testing-library/react";
 import Board from "./Board";
 import { ShipContext } from "../../App";
-import { renderHook, act } from "@testing-library/react-hooks";
 
 const setupBoard = (ship) => {
   return render(
-    <ShipContext.Provider value={{ currentShip: ship }}>
+    <ShipContext.Provider value={{ currentShip: ship, setPlacedShips: () => {} }}>
       <Board ownerProp="player" />
     </ShipContext.Provider>
   );
@@ -15,7 +14,7 @@ describe("drag & drop", () => {
   describe("horizontal carrier by its first square", () => {
     let currentShip;
     beforeEach(() => {
-      currentShip = { name: "carrier", index: 1, aftSquares: 0, foreSquares: 4, direction: "horizontal" };
+      currentShip = { name: "carrier", index: 5, aftSquares: 0, foreSquares: 4, direction: "horizontal" };
     });
 
     test("onto board[0, 0] is allowed", () => {

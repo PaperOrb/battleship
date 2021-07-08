@@ -4,7 +4,7 @@ import { ShipContext } from "../../App";
 export default function Board({ ownerProp, visibility }) {
   const [boardSize] = useState(7);
   const [board, setBoard] = useState(createBoard(boardSize));
-  const { currentShip } = useContext(ShipContext);
+  const { currentShip, setPlacedShips } = useContext(ShipContext);
 
   // set movable squares when a ship is selected
   useEffect(() => {
@@ -96,7 +96,13 @@ export default function Board({ ownerProp, visibility }) {
       return board[row][col].isShip === true;
     });
 
-    if (obstructions) return;
+    if (obstructions) {
+      return;
+    } else {
+      setPlacedShips((prevPlacedShips) => {
+        return [...prevPlacedShips, currentShip.name];
+      });
+    }
 
     updateBoard((boardEle) => {
       occupiedShipSquares.forEach((domCoordInt) => {

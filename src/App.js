@@ -6,6 +6,7 @@ function App() {
   const [boardVisibility, setBoardVisibility] = useState("hide-board");
   const [shipsArePlaced, setShipsArePlaced] = useState("hide-board");
   const [currentShip, setCurrentShip] = useState(false);
+  const [placedShips, setPlacedShips] = useState([]);
 
   // const [player, setPlayer] = useState(player.create("player"));
 
@@ -24,9 +25,16 @@ function App() {
 
   return (
     <div className="board-container">
-      <ShipContext.Provider value={{ currentShip: currentShip, setCurrentShip: setCurrentShip }}>
-        <Board ownerProp="player" currentShip={currentShip} />
-        <Board ownerProp="cpu" visibility={boardVisibility} currentShip={currentShip} />
+      <ShipContext.Provider
+        value={{
+          currentShip: currentShip,
+          setCurrentShip: setCurrentShip,
+          placedShips: placedShips,
+          setPlacedShips: setPlacedShips,
+        }}
+      >
+        <Board ownerProp="player" />
+        <Board ownerProp="cpu" visibility={boardVisibility} />
 
         <ShipPicker />
       </ShipContext.Provider>
