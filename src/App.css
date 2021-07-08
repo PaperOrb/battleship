@@ -19,7 +19,7 @@ html, body {
 
 .board-container {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   padding: 5vw;
 }
 
@@ -34,14 +34,6 @@ html, body {
 /* get board squares to render */
 .board-square {
   background-color: var(--water);
-}
-
-.hide-board {
-  display: none;
-}
-
-.unhide-board {
-  display: visible
 }
 
 .checked-sq {
@@ -98,4 +90,12 @@ html, body {
 .orientation-btn:hover {
   cursor: pointer;
   background-color: var(--primary-color);
+}
+
+.hide-element {
+  display: none;
+}
+
+.unhide-element {
+  display: visible
 }

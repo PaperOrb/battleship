@@ -3,14 +3,11 @@ import Board from "./components/Board/Board";
 import ShipPicker from "./components/ShipPicker/ShipPicker";
 
 function App() {
-  const [boardVisibility, setBoardVisibility] = useState("hide-board");
-  const [shipsArePlaced, setShipsArePlaced] = useState("hide-board");
+  const [boardVisibility, setBoardVisibility] = useState("hide-element");
+  const [shipPickerVisibility, setShipPickerVisibility] = useState("unhide-element");
   const [currentShip, setCurrentShip] = useState(false);
   const [placedShips, setPlacedShips] = useState([]);
 
-  // const [player, setPlayer] = useState(player.create("player"));
-
-  // const [enemy, setEnemy] = useState(player.create("cpu"));
   // const [enemyBoardIsVisible, setEnemyBoardIsVisible] = useState("hide-enemy-board");
 
   // Initialize game
@@ -21,7 +18,12 @@ function App() {
   // }, []);
 
   // unhides CPU board once all ships are placed
-  useEffect(() => {}, [shipsArePlaced]);
+  useEffect(() => {
+    if (placedShips.length === 5) {
+      setBoardVisibility("unhide-element");
+      setShipPickerVisibility("hide-element");
+    }
+  }, [placedShips]);
 
   return (
     <div className="board-container">
@@ -36,7 +38,7 @@ function App() {
         <Board ownerProp="player" />
         <Board ownerProp="cpu" visibility={boardVisibility} />
 
-        <ShipPicker />
+        <ShipPicker visibility={shipPickerVisibility} />
       </ShipContext.Provider>
     </div>
   );

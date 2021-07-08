@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { ShipContext } from "../../App";
 
-export default function ShipPicker() {
+export default function ShipPicker({ visibility }) {
   const { currentShip, setCurrentShip, placedShips, setPlacedShips } = useContext(ShipContext);
   const [orientation, setOrientation] = useState("horizontal");
 
@@ -147,7 +147,7 @@ export default function ShipPicker() {
   };
 
   return (
-    <div>
+    <div className={`${visibility}`}>
       <div className="ship-picker grid-template-rows">
         {carrier()}
         {battleship()}
