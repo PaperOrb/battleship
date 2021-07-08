@@ -2,6 +2,7 @@
   --primary-color: rgb(35,35,44);
   --water: rgb(12, 103, 177);
   --missed: rgb(108, 114, 122);
+  --ship-color: rgb(86, 218, 137);
 }
 
 html, body {
@@ -48,7 +49,7 @@ html, body {
 }
 
 .friendly-sq {
-  background-color: green;
+  background-color: var(--ship-color);
 }
 
 .hit-sq {
@@ -65,7 +66,6 @@ html, body {
   gap: 5px;
   width: 35vw;
   height: 35vw;
-  background-color: red;
 }
 
 .grid-template-columns {
@@ -83,7 +83,7 @@ html, body {
 
 .ship {
   display: grid;
-  background-color: blue;
+  background-color: var(--ship-color);
 }
 
 .orientation-btn {

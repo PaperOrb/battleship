@@ -20,8 +20,6 @@ export default function ShipPicker() {
       direction: orientation,
     };
 
-    console.log(ship);
-
     setCurrentShip(ship);
   };
 
