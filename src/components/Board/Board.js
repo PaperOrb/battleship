@@ -59,7 +59,13 @@ export default function Board({ ownerProp, visibility }) {
       let domCoords = e.target.getAttribute("data-coords");
 
       updateBoard((boardEle) => {
-        if (JSON.stringify(boardEle.coords) === domCoords) boardEle.isChecked = true;
+        if (JSON.stringify(boardEle.coords) !== domCoords) return boardEle; // update to work with .isHit
+        if (boardEle.isShip === true) {
+          boardEle.isHit = true;
+        } else {
+          boardEle.isChecked = true;
+        }
+
         return boardEle;
       });
     }

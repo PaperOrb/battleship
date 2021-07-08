@@ -146,6 +146,10 @@ export default function ShipPicker({ visibility }) {
     shipPicker.classList.toggle("grid-template-rows");
   };
 
+  let showenemyboard = () => {
+    setPlacedShips(["carrier", "battleship", "destroyer", "submarine", "patrolboat"]);
+  };
+
   return (
     <div className={`${visibility}`}>
       <div className="ship-picker grid-template-rows">
@@ -159,6 +163,9 @@ export default function ShipPicker({ visibility }) {
       <div>
         <button className="orientation-btn" onClick={toggleOrientation}>
           Toggle Orientation
+        </button>
+        <button className="orientation-btn" onClick={showenemyboard}>
+          show enemy board
         </button>
       </div>
     </div>

@@ -2,13 +2,37 @@ import { render, fireEvent } from "@testing-library/react";
 import Board from "./Board";
 import { ShipContext } from "../../App";
 
-const setupBoard = (ship) => {
+const setupBoard = (ship, owner) => {
   return render(
     <ShipContext.Provider value={{ currentShip: ship, setPlacedShips: () => {} }}>
-      <Board ownerProp="player" />
+      <Board ownerProp={owner} visibility={"unhide-element"} />
     </ShipContext.Provider>
   );
 };
+
+describe("attacking enemy square", () => {
+  let currentShip;
+  let enemyBoard;
+  let sqToAttack;
+  beforeEach(() => {
+    currentShip = { name: "carrier", index: 5, aftSquares: 0, foreSquares: 4, direction: "horizontal" };
+    enemyBoard = setupBoard(currentShip, "cpu");
+    sqToAttack = enemyBoard.getByTestId("square0_cpu");
+    fireEvent.click(sqToAttack);
+  });
+  describe("that's empty", () => {
+    test("sets color to gray", () => {
+      expect(sqToAttack.classList.contains("checked-sq")).toEqual(true);
+    });
+  });
+
+  describe("that has enemy ship", () => {
+    test("sets color to red", () => {
+      fireEvent.drop(sqToAttack);
+      expect(sqToAttack.classList.contains("hit-sq")).toEqual(true);
+    });
+  });
+});
 
 describe("drag & drop", () => {
   describe("horizontal carrier by its first square", () => {
@@ -18,7 +42,7 @@ describe("drag & drop", () => {
     });
 
     test("onto board[0, 0] is allowed", () => {
-      let boardComponent = setupBoard(currentShip);
+      let boardComponent = setupBoard(currentShip, "player");
       let sqDestination = boardComponent.getByTestId(`square0_player`);
       fireEvent.drop(sqDestination);
 
@@ -31,7 +55,7 @@ describe("drag & drop", () => {
     });
 
     test("onto board[0, 6] is disallowed", () => {
-      let boardComponent = setupBoard(currentShip);
+      let boardComponent = setupBoard(currentShip, "player");
       let sqDestination = boardComponent.getByTestId(`square6_player`);
       fireEvent.drop(sqDestination);
 
@@ -44,7 +68,7 @@ describe("drag & drop", () => {
     });
 
     test("onto occupied spot is disallowed", () => {
-      let boardComponent = setupBoard(currentShip);
+      let boardComponent = setupBoard(currentShip, "player");
       let occupiedSpot = boardComponent.getByTestId(`square1_player`);
       fireEvent.drop(occupiedSpot);
 
@@ -64,7 +88,7 @@ describe("drag & drop", () => {
     });
 
     test("onto board[6, 0] is disallowed", () => {
-      let boardComponent = setupBoard(currentShip);
+      let boardComponent = setupBoard(currentShip, "player");
       let sqDestination = boardComponent.getByTestId(`square60_player`);
       fireEvent.drop(sqDestination);
 
@@ -77,7 +101,7 @@ describe("drag & drop", () => {
     });
 
     test("onto board[6, 6] is allowed", () => {
-      let boardComponent = setupBoard(currentShip);
+      let boardComponent = setupBoard(currentShip, "player");
       let sqDestination = boardComponent.getByTestId(`square66_player`);
       fireEvent.drop(sqDestination);
 
@@ -97,7 +121,7 @@ describe("drag & drop", () => {
     });
 
     test("onto board[0, 0] is disallowed", () => {
-      let boardComponent = setupBoard(currentShip);
+      let boardComponent = setupBoard(currentShip, "player");
       let sqDestination = boardComponent.getByTestId(`square0_player`);
       fireEvent.drop(sqDestination);
 
@@ -110,7 +134,7 @@ describe("drag & drop", () => {
     });
 
     test("onto board[6, 6] is disallowed", () => {
-      let boardComponent = setupBoard(currentShip);
+      let boardComponent = setupBoard(currentShip, "player");
       let sqDestination = boardComponent.getByTestId(`square66_player`);
       fireEvent.drop(sqDestination);
 
@@ -123,7 +147,7 @@ describe("drag & drop", () => {
     });
 
     test("onto board[0, 3] is allowed", () => {
-      let boardComponent = setupBoard(currentShip);
+      let boardComponent = setupBoard(currentShip, "player");
       let sqDestination = boardComponent.getByTestId(`square3_player`);
       fireEvent.drop(sqDestination);
 
@@ -143,7 +167,7 @@ describe("drag & drop", () => {
     });
 
     test("onto board[0, 0] is allowed", () => {
-      let boardComponent = setupBoard(currentShip);
+      let boardComponent = setupBoard(currentShip, "player");
       let sqDestination = boardComponent.getByTestId(`square0_player`);
       fireEvent.drop(sqDestination);
 
@@ -157,7 +181,7 @@ describe("drag & drop", () => {
     });
 
     test("onto board[6, 6] is disallowed", () => {
-      let boardComponent = setupBoard(currentShip);
+      let boardComponent = setupBoard(currentShip, "player");
       let sqDestination = boardComponent.getByTestId(`square66_player`);
       fireEvent.drop(sqDestination);
 
@@ -171,7 +195,7 @@ describe("drag & drop", () => {
     });
 
     test("onto occupied spot is disallowed", () => {
-      let boardComponent = setupBoard(currentShip);
+      let boardComponent = setupBoard(currentShip, "player");
       let occupiedSpot = boardComponent.getByTestId(`square10_player`);
       fireEvent.drop(occupiedSpot);
 
@@ -191,7 +215,7 @@ describe("drag & drop", () => {
     });
 
     test("onto board[3, 0] is allowed", () => {
-      let boardComponent = setupBoard(currentShip);
+      let boardComponent = setupBoard(currentShip, "player");
       let sqDestination = boardComponent.getByTestId(`square30_player`);
       fireEvent.drop(sqDestination);
 
@@ -205,7 +229,7 @@ describe("drag & drop", () => {
     });
 
     test("onto board[0, 6] is disallowed", () => {
-      let boardComponent = setupBoard(currentShip);
+      let boardComponent = setupBoard(currentShip, "player");
       let sqDestination = boardComponent.getByTestId(`square6_player`);
       fireEvent.drop(sqDestination);
 
@@ -226,7 +250,7 @@ describe("drag & drop", () => {
     });
 
     test("onto board[6, 0] is allowed", () => {
-      let boardComponent = setupBoard(currentShip);
+      let boardComponent = setupBoard(currentShip, "player");
       let sqDestination = boardComponent.getByTestId(`square60_player`);
       fireEvent.drop(sqDestination);
 
@@ -240,7 +264,7 @@ describe("drag & drop", () => {
     });
 
     test("onto board[0, 6] is disallowed", () => {
-      let boardComponent = setupBoard(currentShip);
+      let boardComponent = setupBoard(currentShip, "player");
       let sqDestination = boardComponent.getByTestId(`square6_player`);
       fireEvent.drop(sqDestination);
 
@@ -261,7 +285,7 @@ describe("drag & drop", () => {
     });
 
     test("onto occupied spot is disallowed", () => {
-      let boardComponent = setupBoard(currentShip);
+      let boardComponent = setupBoard(currentShip, "player");
       let occupiedSpot = boardComponent.getByTestId(`square1_player`);
       fireEvent.drop(occupiedSpot);
 
@@ -274,7 +298,7 @@ describe("drag & drop", () => {
     });
 
     test("onto board[0, 0] is allowed", () => {
-      let boardComponent = setupBoard(currentShip);
+      let boardComponent = setupBoard(currentShip, "player");
       let sqDestination = boardComponent.getByTestId(`square0_player`);
       fireEvent.drop(sqDestination);
 
@@ -288,7 +312,7 @@ describe("drag & drop", () => {
     });
 
     test("onto board[0, 6] is disallowed", () => {
-      let boardComponent = setupBoard(currentShip);
+      let boardComponent = setupBoard(currentShip, "player");
       let sqDestination = boardComponent.getByTestId(`square6_player`);
       fireEvent.drop(sqDestination);
 
@@ -309,7 +333,7 @@ describe("drag & drop", () => {
     });
 
     test("onto occupied spot is disallowed", () => {
-      let boardComponent = setupBoard(currentShip);
+      let boardComponent = setupBoard(currentShip, "player");
       let occupiedSpot = boardComponent.getByTestId(`square30_player`);
       fireEvent.drop(occupiedSpot);
 
@@ -322,7 +346,7 @@ describe("drag & drop", () => {
     });
 
     test("onto board[6, 0] is allowed", () => {
-      let boardComponent = setupBoard(currentShip);
+      let boardComponent = setupBoard(currentShip, "player");
       let sqDestination = boardComponent.getByTestId(`square60_player`);
       fireEvent.drop(sqDestination);
 
@@ -336,7 +360,7 @@ describe("drag & drop", () => {
     });
 
     test("onto board[0, 6] is disallowed", () => {
-      let boardComponent = setupBoard(currentShip);
+      let boardComponent = setupBoard(currentShip, "player");
       let sqDestination = boardComponent.getByTestId(`square6_player`);
       fireEvent.drop(sqDestination);
 
@@ -356,7 +380,7 @@ describe("drag & drop", () => {
     });
 
     test("onto occupied spot is disallowed", () => {
-      let boardComponent = setupBoard(currentShip);
+      let boardComponent = setupBoard(currentShip, "player");
       let occupiedSpot = boardComponent.getByTestId(`square2_player`);
       fireEvent.drop(occupiedSpot);
 
@@ -369,7 +393,7 @@ describe("drag & drop", () => {
     });
 
     test("onto board[0, 0] is allowed", () => {
-      let boardComponent = setupBoard(currentShip);
+      let boardComponent = setupBoard(currentShip, "player");
       let sqDestination = boardComponent.getByTestId(`square0_player`);
       fireEvent.drop(sqDestination);
 
@@ -383,7 +407,7 @@ describe("drag & drop", () => {
     });
 
     test("onto board[0, 6] is disallowed", () => {
-      let boardComponent = setupBoard(currentShip);
+      let boardComponent = setupBoard(currentShip, "player");
       let sqDestination = boardComponent.getByTestId(`square6_player`);
       fireEvent.drop(sqDestination);
 
@@ -404,7 +428,7 @@ describe("drag & drop", () => {
     });
 
     test("onto occupied spot is disallowed", () => {
-      let boardComponent = setupBoard(currentShip);
+      let boardComponent = setupBoard(currentShip, "player");
       let occupiedSpot = boardComponent.getByTestId(`square20_player`);
       fireEvent.drop(occupiedSpot);
 
@@ -417,7 +441,7 @@ describe("drag & drop", () => {
     });
 
     test("onto board[6, 0] is allowed", () => {
-      let boardComponent = setupBoard(currentShip);
+      let boardComponent = setupBoard(currentShip, "player");
       let sqDestination = boardComponent.getByTestId(`square60_player`);
       fireEvent.drop(sqDestination);
 
@@ -431,7 +455,7 @@ describe("drag & drop", () => {
     });
 
     test("onto board[0, 6] is disallowed", () => {
-      let boardComponent = setupBoard(currentShip);
+      let boardComponent = setupBoard(currentShip, "player");
       let sqDestination = boardComponent.getByTestId(`square6_player`);
       fireEvent.drop(sqDestination);
 
@@ -452,7 +476,7 @@ describe("drag & drop", () => {
     });
 
     test("onto occupied spot is disallowed", () => {
-      let boardComponent = setupBoard(currentShip);
+      let boardComponent = setupBoard(currentShip, "player");
       let occupiedSpot = boardComponent.getByTestId(`square2_player`);
       fireEvent.drop(occupiedSpot);
 
@@ -465,7 +489,7 @@ describe("drag & drop", () => {
     });
 
     test("onto board[0, 0] is allowed", () => {
-      let boardComponent = setupBoard(currentShip);
+      let boardComponent = setupBoard(currentShip, "player");
       let sqDestination = boardComponent.getByTestId(`square0_player`);
       fireEvent.drop(sqDestination);
 
@@ -479,7 +503,7 @@ describe("drag & drop", () => {
     });
 
     test("onto board[0, 6] is disallowed", () => {
-      let boardComponent = setupBoard(currentShip);
+      let boardComponent = setupBoard(currentShip, "player");
       let sqDestination = boardComponent.getByTestId(`square6_player`);
       fireEvent.drop(sqDestination);
 
@@ -500,7 +524,7 @@ describe("drag & drop", () => {
     });
 
     test("onto occupied spot is disallowed", () => {
-      let boardComponent = setupBoard(currentShip);
+      let boardComponent = setupBoard(currentShip, "player");
       let occupiedSpot = boardComponent.getByTestId(`square20_player`);
       fireEvent.drop(occupiedSpot);
 
@@ -513,7 +537,7 @@ describe("drag & drop", () => {
     });
 
     test("onto board[6, 0] is allowed", () => {
-      let boardComponent = setupBoard(currentShip);
+      let boardComponent = setupBoard(currentShip, "player");
       let sqDestination = boardComponent.getByTestId(`square60_player`);
       fireEvent.drop(sqDestination);
 
@@ -527,7 +551,7 @@ describe("drag & drop", () => {
     });
 
     test("onto board[0, 6] is disallowed", () => {
-      let boardComponent = setupBoard(currentShip);
+      let boardComponent = setupBoard(currentShip, "player");
       let sqDestination = boardComponent.getByTestId(`square6_player`);
       fireEvent.drop(sqDestination);
 
@@ -548,7 +572,7 @@ describe("drag & drop", () => {
     });
 
     test("onto board[0, 0] is allowed", () => {
-      let boardComponent = setupBoard(currentShip);
+      let boardComponent = setupBoard(currentShip, "player");
       let sqDestination = boardComponent.getByTestId(`square0_player`);
       fireEvent.drop(sqDestination);
 
@@ -562,7 +586,7 @@ describe("drag & drop", () => {
     });
 
     test("onto board[0, 6] is disallowed", () => {
-      let boardComponent = setupBoard(currentShip);
+      let boardComponent = setupBoard(currentShip, "player");
       let sqDestination = boardComponent.getByTestId(`square6_player`);
       fireEvent.drop(sqDestination);
 
@@ -576,7 +600,7 @@ describe("drag & drop", () => {
     });
 
     test("onto occupied spot is disallowed", () => {
-      let boardComponent = setupBoard(currentShip);
+      let boardComponent = setupBoard(currentShip, "player");
       let occupiedSpot = boardComponent.getByTestId(`square1_player`);
       fireEvent.drop(occupiedSpot);
 
@@ -596,7 +620,7 @@ describe("drag & drop", () => {
     });
 
     test("onto board[6, 0] is allowed", () => {
-      let boardComponent = setupBoard(currentShip);
+      let boardComponent = setupBoard(currentShip, "player");
       let sqDestination = boardComponent.getByTestId(`square60_player`);
       fireEvent.drop(sqDestination);
 
@@ -610,7 +634,7 @@ describe("drag & drop", () => {
     });
 
     test("onto board[0, 6] is disallowed", () => {
-      let boardComponent = setupBoard(currentShip);
+      let boardComponent = setupBoard(currentShip, "player");
       let sqDestination = boardComponent.getByTestId(`square6_player`);
       fireEvent.drop(sqDestination);
 
@@ -624,7 +648,7 @@ describe("drag & drop", () => {
     });
 
     test("onto occupied spot is disallowed", () => {
-      let boardComponent = setupBoard(currentShip);
+      let boardComponent = setupBoard(currentShip, "player");
       let occupiedSpot = boardComponent.getByTestId(`square10_player`);
       fireEvent.drop(occupiedSpot);
 
