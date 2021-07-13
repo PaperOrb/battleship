@@ -1,10 +1,10 @@
 import { useEffect, useContext, useState } from "react";
 import { ShipContext } from "../../App";
 
-export default function Board({ ownerProp, visibility }) {
+export default function Board({ ownerProp, visibility, setPlacedShips }) {
   const [boardSize] = useState(7);
   const [board, setBoard] = useState(createBoard(boardSize));
-  const { currentShip, setPlacedShips } = useContext(ShipContext);
+  const { currentShip } = useContext(ShipContext);
 
   // set movable squares when a ship is selected
   useEffect(() => {
@@ -50,6 +50,8 @@ export default function Board({ ownerProp, visibility }) {
           return callBack(arrEle);
         });
       });
+      // console.log(JSON.stringify(newBoard));
+      // console.log("================");
       return newBoard;
     });
   };
@@ -71,10 +73,6 @@ export default function Board({ ownerProp, visibility }) {
     }
   };
 
-  let allowDrop = (e) => {
-    e.preventDefault();
-  };
-
   let generateShipCoords = (copyOfClickedShipSq, squaresCount, shipDirection, aftOrForeSquares) => {
     let direction = shipDirection === "horizontal" ? 1 : 0;
     let occupiedSquares = [];
@@ -87,10 +85,13 @@ export default function Board({ ownerProp, visibility }) {
 
   let placeShip = (e) => {
     e.preventDefault();
+
     let clickedShipSquareStr = e.target.getAttribute("data-coords");
     let clickedShipSquare = JSON.parse(clickedShipSquareStr);
     let row = clickedShipSquare[0];
     let col = clickedShipSquare[1];
+    // console.log(JSON.stringify(currentShip)); // why is this false?
+
     if (board[row][col].isMovable === false) return;
 
     let aftSquares = generateShipCoords([...clickedShipSquare], currentShip.aftSquares, currentShip.direction, -1);
@@ -124,21 +125,22 @@ export default function Board({ ownerProp, visibility }) {
     let squareClass = "board-square empty-sq"; // squares default to empty
     if (sq.isHit) {
       squareClass = "board-square hit-sq"; // square contains a hit ship
-    } else if (sq.isShip && sq.owner === "player") {
+    } else if (sq.isShip) {
       squareClass = "board-square friendly-sq"; // square contains a friendly ship
     } else if (sq.isChecked) {
       squareClass = "board-square checked-sq"; // square has been checked
     }
-    if (sq.owner !== "player") clickHandler = attackSq;
+    // if (sq.owner !== "player") clickHandler = attackSq;
 
     return (
       <div
         key={key}
+        id={`${ownerProp}-square-${key}`}
         data-testid={`square${key}_${ownerProp}`}
         className={squareClass}
         onClick={clickHandler}
         data-coords={JSON.stringify(sq.coords)}
-        onDragOver={allowDrop}
+        onDragOver={(e) => e.preventDefault()}
         onDrop={placeShip}
       ></div>
     );
@@ -156,7 +158,7 @@ export default function Board({ ownerProp, visibility }) {
   };
 
   return (
-    <div key={5} className={`board ${visibility}`}>
+    <div key={5} className={`board ${visibility}`} id={`${ownerProp}-board`}>
       {renderBoard()}
     </div>
   );

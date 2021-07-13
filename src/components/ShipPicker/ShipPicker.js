@@ -1,8 +1,8 @@
 import { useContext, useState } from "react";
 import { ShipContext } from "../../App";
 
-export default function ShipPicker({ visibility }) {
-  const { currentShip, setCurrentShip, placedShips, setPlacedShips } = useContext(ShipContext);
+export default function ShipPicker({ visibility, placedShips, setPlacedShips, owner }) {
+  const { currentShip, setCurrentShip } = useContext(ShipContext);
   const [orientation, setOrientation] = useState("horizontal");
 
   // sets ship object when a ship is dragged/clicked
@@ -137,7 +137,7 @@ export default function ShipPicker({ visibility }) {
       return prevOrientation === "vertical" ? "horizontal" : "vertical";
     });
     let ships = document.getElementsByClassName("ship-container");
-    let shipPicker = document.querySelector(".ship-picker");
+    let shipPicker = document.getElementById(`.${owner}ship-picker`);
     Array.from(ships).forEach((ship) => {
       ship.classList.toggle("grid-template-columns");
       ship.classList.toggle("grid-template-rows");
@@ -146,13 +146,19 @@ export default function ShipPicker({ visibility }) {
     shipPicker.classList.toggle("grid-template-rows");
   };
 
+  // debugging methods
   let showenemyboard = () => {
     setPlacedShips(["carrier", "battleship", "destroyer", "submarine", "patrolboat"]);
   };
 
+  let showPlayerBoard = () => {
+    setPlacedShips(["carrier", "battleship", "destroyer", "submarine", "patrolboat"]);
+  };
+  // end debugging methods
+
   return (
     <div className={`${visibility}`}>
-      <div className="ship-picker grid-template-rows">
+      <div id={`${owner}-ship-picker`} className={`ship-picker grid-template-rows`}>
         {carrier()}
         {battleship()}
         {destroyer()}
@@ -165,7 +171,10 @@ export default function ShipPicker({ visibility }) {
           Toggle Orientation
         </button>
         <button className="orientation-btn" onClick={showenemyboard}>
-          show enemy board
+          begin game
+        </button>
+        <button className="orientation-btn" onClick={showPlayerBoard}>
+          show player board
         </button>
       </div>
     </div>
