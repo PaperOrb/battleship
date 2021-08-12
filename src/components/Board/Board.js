@@ -1,5 +1,6 @@
 import { useEffect, useContext, useState } from "react";
 import { ShipContext } from "../../App";
+import placeShip from "../Board/BoardLogic";
 
 export default function Board({ ownerProp, visibility, setPlacedShips }) {
   const [boardSize] = useState(7);
@@ -83,43 +84,6 @@ export default function Board({ ownerProp, visibility, setPlacedShips }) {
     return occupiedSquares;
   };
 
-  let placeShip = (e) => {
-    e.preventDefault();
-
-    let clickedShipSquareStr = e.target.getAttribute("data-coords");
-    let clickedShipSquare = JSON.parse(clickedShipSquareStr);
-    let row = clickedShipSquare[0];
-    let col = clickedShipSquare[1];
-    // console.log(JSON.stringify(currentShip)); // why is this false?
-
-    if (board[row][col].isMovable === false) return;
-
-    let aftSquares = generateShipCoords([...clickedShipSquare], currentShip.aftSquares, currentShip.direction, -1);
-    let foreSquares = generateShipCoords([...clickedShipSquare], currentShip.foreSquares, currentShip.direction, 1);
-    let occupiedShipSquares = [[...clickedShipSquare]].concat(aftSquares.concat(foreSquares));
-    let obstructions = occupiedShipSquares.some((domCoordInt) => {
-      let row = domCoordInt[0];
-      let col = domCoordInt[1];
-      return board[row][col].isShip === true;
-    });
-
-    if (obstructions) {
-      return;
-    } else {
-      setPlacedShips((prevPlacedShips) => {
-        return [...prevPlacedShips, currentShip.name];
-      });
-    }
-
-    updateBoard((boardEle) => {
-      occupiedShipSquares.forEach((domCoordInt) => {
-        let coordString = JSON.stringify(domCoordInt);
-        if (JSON.stringify(boardEle.coords) === coordString) boardEle.isShip = true;
-      });
-      return boardEle;
-    });
-  };
-
   let renderSquare = (sq, key) => {
     let clickHandler;
     let squareClass = "board-square empty-sq"; // squares default to empty
@@ -141,7 +105,7 @@ export default function Board({ ownerProp, visibility, setPlacedShips }) {
         onClick={clickHandler}
         data-coords={JSON.stringify(sq.coords)}
         onDragOver={(e) => e.preventDefault()}
-        onDrop={placeShip}
+        onDrop={(event) => placeShip({ event, board, generateShipCoords, currentShip, setPlacedShips, updateBoard })}
       ></div>
     );
   };

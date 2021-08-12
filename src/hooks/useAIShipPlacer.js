@@ -1,56 +1,52 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
-export default function useAIShipPlacer() {
+export default function useAIShipPlacer({ currentShip, aiPlacedShips }) {
   useEffect(() => {
-    let direction = Math.round(Math.random());
-
-    let coordPicker = (index) => {
-      let min = 0;
-      let max = 6;
-      let rowOrCol = Math.floor(Math.random() * (max - min + 1) + min);
-      let xyCoord = direction === 0 ? `${rowOrCol}${index}` : `${index}${rowOrCol}`;
-      if (Number(rowOrCol[0]) === 0) return xyCoord[1];
-      return xyCoord;
-    };
-
-    let coordPicker2 = (index) => {
-      // requirements list:
-      // 1. must pick unpicked row and col (can recursively call random generator like in the bookmarked link)
-      // 2. must pick spot so ship isn't OOB (can set max from array of droppable ship spots and call it a day)
-      let rowsColsArray = [0, 1, 2, 3, 4, 5, 6];
-      let ship
-      let min = 0;
-      let max = rowsColsArray.length - 1;
-      let randEle = Math.floor(Math.random() * (max - min + 1) + min);
-      let length = rowsColsArray.length;
-      while (length--) {
-        rowsColsArray.splice(randEle, 1);
-      }
-    };
-
-    let shipsArr = ["carrier", "battleship", "destroyer", "submarine", "patrolboat"];
-
-    setTimeout(() => {
-      shipsArr.forEach((ship, index) => {
-        let shipEle = document.getElementById(ship);
-        let mouseDown = new CustomEvent("mousedown", {
-          bubbles: true,
-          cancelable: true,
-          view: window,
-        });
-        let drop = new Event("drop", {
-          bubbles: true,
-          cancelable: true,
-          view: window,
-        });
-
-        let coordz = coordPicker(index);
-        console.log(coordz);
-        let randomSq = document.getElementById(`cpu-square-${coordz}`);
-        if (randomSq === null) console.log(coordz);
-        shipEle.dispatchEvent(mouseDown);
-        randomSq.dispatchEvent(drop);
-      }, 20);
+    let firstShip = document.getElementById("carrier");
+    let mouseDown = new CustomEvent("mousedown", {
+      bubbles: true,
+      cancelable: true,
+      view: window,
     });
+    firstShip.dispatchEvent(mouseDown);
+
+    // let shipsArr = ["battleship", "destroyer", "submarine", "patrolboat"];
+
+    // setTimeout(() => {
+    //   shipsArr.forEach((ship, index) => {
+    //     let shipEle = document.getElementById(ship);
+    //     shipEle.dispatchEvent(mouseDown);
+    //   }, 20);
+    // });
   }, []);
+
+  useEffect(() => {
+    if (!currentShip) return;
+    async function sleep() {
+      for (;;) {
+        if (aiPlacedShips.includes(currentShip)) return;
+        let drop;
+        let randCoord;
+        await new Promise((r) => {
+          // I think the reason this loops a limited amount with the timeout and an unlimited amount w/o it is because the loop never gives a chance for the async setCurrentShip to occur.
+          drop = new Event("drop", {
+            bubbles: true,
+            cancelable: true,
+            view: window,
+          });
+          let min = 0;
+          let max = 2; // the amount of times the loop occurs can't exceed this max. that's because currentShip isn't updated in lockstep with the drop event.
+          randCoord = Math.floor(Math.random() * (max - min + 1) + min);
+
+          setTimeout(() => {
+            let randomSq = document.getElementById(`cpu-square-${randCoord + 1}0`);
+            console.log(aiPlacedShips.includes(currentShip));
+            randomSq.dispatchEvent(drop);
+          }, 1000);
+        });
+      }
+    }
+
+    sleep();
+  }, [aiPlacedShips, currentShip]);
 }
