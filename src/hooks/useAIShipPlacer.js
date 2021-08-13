@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
+import useBoardLogic from "../components/Board/BoardLogic";
 
 export default function useAIShipPlacer({ currentShip, aiPlacedShips }) {
+  let boardLogic = useBoardLogic();
+
   useEffect(() => {
     let firstShip = document.getElementById("carrier");
     let mouseDown = new CustomEvent("mousedown", {
@@ -40,8 +43,7 @@ export default function useAIShipPlacer({ currentShip, aiPlacedShips }) {
 
           setTimeout(() => {
             let randomSq = document.getElementById(`cpu-square-${randCoord + 1}0`);
-            console.log(aiPlacedShips.includes(currentShip));
-            randomSq.dispatchEvent(drop);
+            boardLogic.placeShip(null, randomSq); // need to find dependency injection video and attempt that here
           }, 1000);
         });
       }

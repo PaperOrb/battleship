@@ -1,11 +1,12 @@
 import { useEffect, useContext, useState } from "react";
 import { ShipContext } from "../../App";
-import placeShip from "../Board/BoardLogic";
+import useBoardLogic from "../Board/BoardLogic";
 
 export default function Board({ ownerProp, visibility, setPlacedShips }) {
   const [boardSize] = useState(7);
   const [board, setBoard] = useState(createBoard(boardSize));
   const { currentShip } = useContext(ShipContext);
+  let boardLogic = useBoardLogic();
 
   // set movable squares when a ship is selected
   useEffect(() => {
@@ -74,18 +75,9 @@ export default function Board({ ownerProp, visibility, setPlacedShips }) {
     }
   };
 
-  let generateShipCoords = (copyOfClickedShipSq, squaresCount, shipDirection, aftOrForeSquares) => {
-    let direction = shipDirection === "horizontal" ? 1 : 0;
-    let occupiedSquares = [];
-    for (; squaresCount > 0; --squaresCount) {
-      copyOfClickedShipSq[direction] += aftOrForeSquares;
-      occupiedSquares.push([...copyOfClickedShipSq]);
-    }
-    return occupiedSquares;
-  };
-
   let renderSquare = (sq, key) => {
     let clickHandler;
+    let nullAIShipCoords = null;
     let squareClass = "board-square empty-sq"; // squares default to empty
     if (sq.isHit) {
       squareClass = "board-square hit-sq"; // square contains a hit ship
@@ -105,7 +97,9 @@ export default function Board({ ownerProp, visibility, setPlacedShips }) {
         onClick={clickHandler}
         data-coords={JSON.stringify(sq.coords)}
         onDragOver={(e) => e.preventDefault()}
-        onDrop={(event) => placeShip({ event, board, generateShipCoords, currentShip, setPlacedShips, updateBoard })}
+        onDrop={(event) =>
+          useBoardLogic.placeShip({ event, nullAIShipCoords, board, currentShip, setPlacedShips, updateBoard })
+        }
       ></div>
     );
   };
