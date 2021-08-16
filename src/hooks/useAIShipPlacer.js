@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import useBoardLogic from "./useBoardLogic";
 
-export default function useAIShipPlacer(currentShip, aiPlacedShips, placeShip, ownerProp) {
+export default function useAIShipPlacer(currentShip, placeShip, ownerProp) {
   useEffect(() => {
     if (ownerProp !== "cpu") return;
-    let firstShip = document.getElementById("carrier");
+    let firstShip = document.getElementById("cpu-carrier");
     let mouseDown = new CustomEvent("mousedown", {
       bubbles: true,
       cancelable: true,
@@ -12,18 +12,19 @@ export default function useAIShipPlacer(currentShip, aiPlacedShips, placeShip, o
     });
     firstShip.dispatchEvent(mouseDown);
 
-    let shipsArr = ["battleship", "destroyer", "submarine", "patrolboat"];
-
+    let shipsArr = ["cpu-battleship", "cpu-destroyer", "cpu-submarine", "cpu-patrolboat"];
     setTimeout(() => {
       shipsArr.forEach((ship, index) => {
         let shipEle = document.getElementById(ship);
+        console.log(shipEle);
+
         shipEle.dispatchEvent(mouseDown);
-      }, 20);
-    });
+      });
+    }, 20);
   }, []);
 
   useEffect(() => {
-    if (ownerProp !== "cpu") return;
+    if (ownerProp !== "cpu") return; // this still runs when they player changes the currentShip, causing the CPU to place the players ship onto its own board. need a way to block this. maybe give the CPU a dedicated currentShip?
     if (!currentShip) return;
     let min = 0;
     let max = 6;

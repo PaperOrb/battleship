@@ -8,6 +8,7 @@ function App() {
   const [enemyShipPickerVisibility, setEnemyShipPickerVisibility] = useState("unhide-element");
   const [playerShipPickerVisibility, setPlayerShipPickerVisibility] = useState("hide-element");
   const [currentShip, setCurrentShip] = useState(false);
+  const [currentAiShip, setCurrentAiShip] = useState(false);
   const [placedShips, setPlacedShips] = useState([]);
   const [aiPlacedShips, setAiPlacedShips] = useState([]);
 
@@ -29,42 +30,35 @@ function App() {
 
   return (
     <div className="board-container">
-      <ShipContext.Provider
-        value={{
-          currentShip: currentShip,
-          setCurrentShip: setCurrentShip,
-          placedShips: placedShips,
-          setPlacedShips: setPlacedShips,
-          aiPlacedShips: aiPlacedShips,
-          setAiPlacedShips: setAiPlacedShips,
-        }}
-      >
-        <Board
-          ownerProp="player"
-          visibility={playerBoardVisibility}
-          setPlacedShips={setPlacedShips}
-          placedShips={null}
-        />
-        <Board
-          ownerProp="cpu"
-          visibility={enemyBoardVisibility}
-          setPlacedShips={setAiPlacedShips}
-          placedShips={aiPlacedShips}
-        />
+      <Board
+        ownerProp="player"
+        visibility={playerBoardVisibility}
+        setPlacedShips={setPlacedShips}
+        currentShip={currentShip}
+      />
+      <Board
+        ownerProp="cpu"
+        visibility={enemyBoardVisibility}
+        setPlacedShips={setAiPlacedShips}
+        currentShip={currentAiShip}
+      />
 
-        <ShipPicker
-          owner={"player"}
-          visibility={playerShipPickerVisibility}
-          placedShips={placedShips}
-          setPlacedShips={setPlacedShips}
-        />
-        <ShipPicker
-          owner={"cpu"}
-          visibility={enemyShipPickerVisibility}
-          placedShips={aiPlacedShips}
-          setPlacedShips={setAiPlacedShips}
-        />
-      </ShipContext.Provider>
+      <ShipPicker
+        owner={"player"}
+        visibility={playerShipPickerVisibility}
+        placedShips={placedShips}
+        setPlacedShips={setPlacedShips}
+        currentShip={currentShip}
+        setCurrentShip={setCurrentShip}
+      />
+      <ShipPicker
+        owner={"cpu"}
+        visibility={enemyShipPickerVisibility}
+        placedShips={aiPlacedShips}
+        setPlacedShips={setAiPlacedShips}
+        currentShip={currentAiShip}
+        setCurrentShip={setCurrentAiShip}
+      />
     </div>
   );
 }

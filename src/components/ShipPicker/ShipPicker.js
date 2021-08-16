@@ -1,8 +1,6 @@
-import { useContext, useState } from "react";
-import { ShipContext } from "../../App";
+import { useState } from "react";
 
-export default function ShipPicker({ visibility, placedShips, setPlacedShips, owner }) {
-  const { currentShip, setCurrentShip } = useContext(ShipContext);
+export default function ShipPicker({ owner, visibility, placedShips, setPlacedShips, currentShip, setCurrentShip }) {
   const [orientation, setOrientation] = useState("horizontal");
 
   // sets ship object when a ship is dragged/clicked
@@ -31,7 +29,7 @@ export default function ShipPicker({ visibility, placedShips, setPlacedShips, ow
           return (
             <div
               key={ele}
-              id="carrier"
+              id={`${owner}-carrier`}
               data-testid={`carrier${ele}`}
               data-num={ele}
               data-length="5"
@@ -52,7 +50,7 @@ export default function ShipPicker({ visibility, placedShips, setPlacedShips, ow
           return (
             <div
               key={ele}
-              id="battleship"
+              id={`${owner}-battleship`}
               data-testid={`battleship${ele}`}
               data-num={ele}
               data-length="4"
@@ -73,7 +71,7 @@ export default function ShipPicker({ visibility, placedShips, setPlacedShips, ow
           return (
             <div
               key={ele}
-              id="destroyer"
+              id={`${owner}-destroyer`}
               data-testid={`destroyer${ele}`}
               data-num={ele}
               data-length="3"
@@ -94,7 +92,7 @@ export default function ShipPicker({ visibility, placedShips, setPlacedShips, ow
           return (
             <div
               key={ele}
-              id="submarine"
+              id={`${owner}-submarine`}
               data-testid={`submarine${ele}`}
               data-num={ele}
               data-length="3"
@@ -115,7 +113,7 @@ export default function ShipPicker({ visibility, placedShips, setPlacedShips, ow
           return (
             <div
               key={ele}
-              id="patrolboat"
+              id={`${owner}-patrolboat`}
               data-testid={`patrolboat${ele}`}
               data-num={ele}
               data-length="2"

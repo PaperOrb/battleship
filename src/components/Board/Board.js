@@ -3,13 +3,12 @@ import { ShipContext } from "../../App";
 import useBoardLogic from "../../hooks/useBoardLogic";
 import useAIShipPlacer from "../../hooks/useAIShipPlacer";
 
-export default function Board({ ownerProp, visibility, setPlacedShips, aiPlacedShips }) {
+export default function Board({ ownerProp, visibility, setPlacedShips, currentShip }) {
   const [boardSize] = useState(7);
   const [board, setBoard] = useState(createBoard(boardSize));
-  const { currentShip } = useContext(ShipContext);
   let { placeShip, updateBoard } = useBoardLogic(board, setBoard, setPlacedShips);
 
-  useAIShipPlacer(currentShip, aiPlacedShips, placeShip, ownerProp );
+  useAIShipPlacer(currentShip, placeShip, ownerProp );
 
   // set movable squares when a ship is selected
   useEffect(() => {
