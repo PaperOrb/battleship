@@ -12,7 +12,7 @@ export default function useBoardLogic(board, setBoard, setPlacedShips) {
 
     let row = coords[0];
     let col = coords[1];
-    if (board[row][col].isMovable === false) return;
+    if (board[row][col].isMovable === false) return false;
 
     let aftSquares = generateShipCoords([...coords], currentShip.aftSquares, currentShip.direction, -1);
     let foreSquares = generateShipCoords([...coords], currentShip.foreSquares, currentShip.direction, 1);
@@ -24,7 +24,7 @@ export default function useBoardLogic(board, setBoard, setPlacedShips) {
     });
 
     if (obstructions) {
-      return;
+      return false;
     } else {
       setPlacedShips((prevPlacedShips) => {
         return [...prevPlacedShips, currentShip.name];
@@ -38,6 +38,7 @@ export default function useBoardLogic(board, setBoard, setPlacedShips) {
       });
       return boardEle;
     });
+    return true;
   };
 
   // updates board with the modified squares returned from callBack
