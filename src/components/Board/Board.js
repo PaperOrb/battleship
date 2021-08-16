@@ -1,12 +1,15 @@
 import { useEffect, useContext, useState } from "react";
 import { ShipContext } from "../../App";
-import useBoardLogic from "../Board/BoardLogic";
+import useBoardLogic from "../../hooks/useBoardLogic";
+import useAIShipPlacer from "../../hooks/useAIShipPlacer";
 
-export default function Board({ ownerProp, visibility, setPlacedShips }) {
+export default function Board({ ownerProp, visibility, setPlacedShips, aiPlacedShips }) {
   const [boardSize] = useState(7);
   const [board, setBoard] = useState(createBoard(boardSize));
   const { currentShip } = useContext(ShipContext);
-  let boardLogic = useBoardLogic();
+  let { placeShip, updateBoard } = useBoardLogic(board, setBoard, setPlacedShips);
+
+  useAIShipPlacer(currentShip, aiPlacedShips, placeShip, ownerProp );
 
   // set movable squares when a ship is selected
   useEffect(() => {
@@ -30,6 +33,7 @@ export default function Board({ ownerProp, visibility, setPlacedShips }) {
     };
 
     updateBoard(sqIsMovable);
+    //eslint-disable-next-line
   }, [currentShip, boardSize]);
 
   function createBoard(size) {
@@ -43,20 +47,6 @@ export default function Board({ ownerProp, visibility, setPlacedShips }) {
 
     return arrWithCoords;
   }
-
-  // updates board with the modified squares returned from callBack
-  let updateBoard = (callBack) => {
-    setBoard((prevBoard) => {
-      let newBoard = prevBoard.map((row) => {
-        return row.map((arrEle) => {
-          return callBack(arrEle);
-        });
-      });
-      // console.log(JSON.stringify(newBoard));
-      // console.log("================");
-      return newBoard;
-    });
-  };
 
   let attackSq = (e) => {
     if (e.target.classList.contains("empty-sq")) {
@@ -97,9 +87,7 @@ export default function Board({ ownerProp, visibility, setPlacedShips }) {
         onClick={clickHandler}
         data-coords={JSON.stringify(sq.coords)}
         onDragOver={(e) => e.preventDefault()}
-        onDrop={(event) =>
-          useBoardLogic.placeShip({ event, nullAIShipCoords, board, currentShip, setPlacedShips, updateBoard })
-        }
+        onDrop={(event) => placeShip(event, nullAIShipCoords, currentShip, setPlacedShips, updateBoard)}
       ></div>
     );
   };

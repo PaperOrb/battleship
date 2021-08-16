@@ -1,12 +1,9 @@
-// setup aiplacer to call this directly, and dictate control flow based on whether the spot is movable+obstructed
-
-export default function useBoardLogic() {
-  let placeShip = ({ event, aiPickedSq, board, currentShip, setPlacedShips, updateBoard }) => {
+export default function useBoardLogic(board, setBoard, setPlacedShips) {
+  let placeShip = (event, aiPickedSq, currentShip) => {
     let coords;
     if (event) {
       event.preventDefault();
       let playerSqCoords = event.target.getAttribute("data-coords");
-      console.log(playerSqCoords);
       coords = JSON.parse(playerSqCoords);
     } else {
       let aiSqCoords = aiPickedSq.getAttribute("data-coords");
@@ -15,8 +12,6 @@ export default function useBoardLogic() {
 
     let row = coords[0];
     let col = coords[1];
-    // console.log(JSON.stringify(currentShip)); // why is this false?
-
     if (board[row][col].isMovable === false) return;
 
     let aftSquares = generateShipCoords([...coords], currentShip.aftSquares, currentShip.direction, -1);
@@ -45,6 +40,19 @@ export default function useBoardLogic() {
     });
   };
 
+  // updates board with the modified squares returned from callBack
+  let updateBoard = (callBack) => {
+    setBoard((prevBoard) => {
+      let newBoard = prevBoard.map((row) => {
+        return row.map((arrEle) => {
+          return callBack(arrEle);
+        });
+      });
+
+      return newBoard;
+    });
+  };
+
   let generateShipCoords = (copyOfClickedShipSq, squaresCount, shipDirection, aftOrForeSquares) => {
     let direction = shipDirection === "horizontal" ? 1 : 0;
     let occupiedSquares = [];
@@ -55,5 +63,5 @@ export default function useBoardLogic() {
     return occupiedSquares;
   };
 
-  return { placeShip, generateShipCoords };
+  return { placeShip, updateBoard };
 }

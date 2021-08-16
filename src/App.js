@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Board from "./components/Board/Board";
 import ShipPicker from "./components/ShipPicker/ShipPicker";
-import useAIShipPlacer from "./hooks/useAIShipPlacer";
 
 function App() {
   const [enemyBoardVisibility, setEnemyBoardVisibility] = useState("unhide-element");
@@ -11,8 +10,6 @@ function App() {
   const [currentShip, setCurrentShip] = useState(false);
   const [placedShips, setPlacedShips] = useState([]);
   const [aiPlacedShips, setAiPlacedShips] = useState([]);
-
-  useAIShipPlacer({ currentShip, aiPlacedShips });
 
   useEffect(() => {
     if (placedShips.length === 5) {
@@ -42,8 +39,18 @@ function App() {
           setAiPlacedShips: setAiPlacedShips,
         }}
       >
-        <Board ownerProp="player" visibility={playerBoardVisibility} setPlacedShips={setPlacedShips} />
-        <Board ownerProp="cpu" visibility={enemyBoardVisibility} setPlacedShips={setAiPlacedShips} />
+        <Board
+          ownerProp="player"
+          visibility={playerBoardVisibility}
+          setPlacedShips={setPlacedShips}
+          placedShips={null}
+        />
+        <Board
+          ownerProp="cpu"
+          visibility={enemyBoardVisibility}
+          setPlacedShips={setAiPlacedShips}
+          placedShips={aiPlacedShips}
+        />
 
         <ShipPicker
           owner={"player"}

@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import useBoardLogic from "../components/Board/BoardLogic";
+import useBoardLogic from "./useBoardLogic";
 
-export default function useAIShipPlacer({ currentShip, aiPlacedShips }) {
-  let boardLogic = useBoardLogic();
-
+export default function useAIShipPlacer(currentShip, aiPlacedShips, placeShip, ownerProp) {
   useEffect(() => {
+    if (ownerProp !== "cpu") return;
     let firstShip = document.getElementById("carrier");
     let mouseDown = new CustomEvent("mousedown", {
       bubbles: true,
@@ -24,31 +23,33 @@ export default function useAIShipPlacer({ currentShip, aiPlacedShips }) {
   }, []);
 
   useEffect(() => {
+    if (ownerProp !== "cpu") return;
     if (!currentShip) return;
+    let min = 0;
+    let max = 6;
+
     async function sleep() {
+      // stop this loop using a promise?
+      // if not, does the loop wait for setTimeout or does the loop overflow the callstack so the settimeout never executes its payload?
+      // barring the above, split placeShip into 2 separate functions: validateCoords and placeShip. validateCoords can be synchronous and used to load an array of valid coords. the valid coords array is then used in a batch setState call?
       for (;;) {
-        if (aiPlacedShips.includes(currentShip)) return;
-        let drop;
-        let randCoord;
+        console.log("looped");
+
         await new Promise((r) => {
-          // I think the reason this loops a limited amount with the timeout and an unlimited amount w/o it is because the loop never gives a chance for the async setCurrentShip to occur.
-          drop = new Event("drop", {
-            bubbles: true,
-            cancelable: true,
-            view: window,
-          });
-          let min = 0;
-          let max = 2; // the amount of times the loop occurs can't exceed this max. that's because currentShip isn't updated in lockstep with the drop event.
-          randCoord = Math.floor(Math.random() * (max - min + 1) + min);
+          // both the await AND settimeout are needed to prevent an infinite loop. i'll have to explain why later when this is done and i have clear answers. for now, add more ships now that carrier is successfully added
+          let randCoord = Math.floor(Math.random() * (max - min + 1) + min);
 
           setTimeout(() => {
-            let randomSq = document.getElementById(`cpu-square-${randCoord + 1}0`);
-            boardLogic.placeShip(null, randomSq); // need to find dependency injection video and attempt that here
-          }, 1000);
+            let adjustedCoords = randCoord === 0 ? randCoord : `${randCoord}0`; // first board row has a decimal coord, not base2
+            let randomSq = document.getElementById(`cpu-square-${adjustedCoords}`);
+            let shipPlaced = placeShip(null, randomSq, currentShip);
+            if (shipPlaced) return;
+          }, 20);
         });
       }
     }
 
     sleep();
-  }, [aiPlacedShips, currentShip]);
+    //eslint-disable-next-line
+  }, [currentShip]);
 }
