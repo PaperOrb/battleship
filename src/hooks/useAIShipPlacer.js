@@ -16,8 +16,6 @@ export default function useAIShipPlacer(currentShip, placeShip, ownerProp) {
     setTimeout(() => {
       shipsArr.forEach((ship, index) => {
         let shipEle = document.getElementById(ship);
-        console.log(shipEle);
-
         shipEle.dispatchEvent(mouseDown);
       });
     }, 20);

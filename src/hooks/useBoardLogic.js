@@ -32,7 +32,6 @@ export default function useBoardLogic(board, setBoard, setPlacedShips) {
       return false;
     } else {
       setPlacedShips((prevPlacedShips) => {
-        console.log(prevPlacedShips);
         return [...prevPlacedShips, currentShip.name];
       });
     }
