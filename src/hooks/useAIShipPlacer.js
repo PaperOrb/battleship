@@ -24,7 +24,7 @@ export default function useAIShipPlacer(currentShip, placeShip, ownerProp) {
   }, []);
 
   useEffect(() => {
-    if (ownerProp !== "cpu") return; // this still runs when they player changes the currentShip, causing the CPU to place the players ship onto its own board. need a way to block this. maybe give the CPU a dedicated currentShip?
+    if (ownerProp !== "cpu") return;
     if (!currentShip) return;
     let min = 0;
     let max = 6;
@@ -36,9 +36,11 @@ export default function useAIShipPlacer(currentShip, placeShip, ownerProp) {
     async function sleep() {
       for (;;) {
         await timeout();
-        let randCoord = Math.floor(Math.random() * (max - min + 1) + min);
+        let randX = Math.floor(Math.random() * (max - min + 1) + min);
+        let randY = Math.floor(Math.random() * (max - min + 1) + min);
 
-        let adjustedCoords = randCoord === 0 ? randCoord : `${randCoord}0`; // first board row has a decimal coord, not base2
+        // add better randomizing logic
+        let adjustedCoords = randY === 0 ? randY : `${randY}${randX}`; // first board row has a decimal coord, not base2
         let randomSq = document.getElementById(`cpu-square-${adjustedCoords}`);
         let shipPlaced = placeShip(null, randomSq, currentShip);
         if (shipPlaced) return;

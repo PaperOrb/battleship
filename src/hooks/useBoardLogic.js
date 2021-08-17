@@ -14,13 +14,18 @@ export default function useBoardLogic(board, setBoard, setPlacedShips) {
     let col = coords[1];
     if (board[row][col].isMovable === false) return false;
 
-    let aftSquares = generateShipCoords([...coords], currentShip.aftSquares, currentShip.direction, -1);
-    let foreSquares = generateShipCoords([...coords], currentShip.foreSquares, currentShip.direction, 1);
+    let aftSquares = generateOccupiedCoords([...coords], currentShip.aftSquares, currentShip.direction, -1);
+    let foreSquares = generateOccupiedCoords([...coords], currentShip.foreSquares, currentShip.direction, 1);
     let occupiedShipSquares = [[...coords]].concat(aftSquares.concat(foreSquares));
     let obstructions = occupiedShipSquares.some((domCoordInt) => {
       let row = domCoordInt[0];
       let col = domCoordInt[1];
-      return board[row][col].isShip === true;
+      // out of bounds coords produce a type error, in which case this try block stops execution by saying there's an obstruction
+      try {
+        return board[row][col].isShip === true;
+      } catch (err) {
+        return true;
+      }
     });
 
     if (obstructions) {
@@ -55,7 +60,7 @@ export default function useBoardLogic(board, setBoard, setPlacedShips) {
     });
   };
 
-  let generateShipCoords = (copyOfClickedShipSq, squaresCount, shipDirection, aftOrForeSquares) => {
+  let generateOccupiedCoords = (copyOfClickedShipSq, squaresCount, shipDirection, aftOrForeSquares) => {
     let direction = shipDirection === "horizontal" ? 1 : 0;
     let occupiedSquares = [];
     for (; squaresCount > 0; --squaresCount) {
