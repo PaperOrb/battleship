@@ -22,7 +22,7 @@ export default function ShipPicker({ owner, visibility, placedShips, setPlacedSh
   };
 
   let carrier = () => {
-    if (placedShips.includes("carrier")) return;
+    if (placedShips.includes(`${owner}-carrier`)) return;
     return (
       <div className="ship-container grid-template-columns" onDragStart={dragShip} draggable="true">
         {[1, 2, 3, 4, 5].map((ele) => {
@@ -43,7 +43,7 @@ export default function ShipPicker({ owner, visibility, placedShips, setPlacedSh
   };
 
   let battleship = () => {
-    if (placedShips.includes("battleship")) return;
+    if (placedShips.includes(`${owner}-battleship`)) return;
     return (
       <div className="ship-container grid-template-columns" onDragStart={dragShip} draggable="true">
         {[1, 2, 3, 4].map((ele) => {
@@ -64,7 +64,7 @@ export default function ShipPicker({ owner, visibility, placedShips, setPlacedSh
   };
 
   let destroyer = () => {
-    if (placedShips.includes("destroyer")) return;
+    if (placedShips.includes(`${owner}-destroyer`)) return;
     return (
       <div className="ship-container grid-template-columns" onDragStart={dragShip} draggable="true">
         {[1, 2, 3].map((ele) => {
@@ -85,7 +85,7 @@ export default function ShipPicker({ owner, visibility, placedShips, setPlacedSh
   };
 
   let submarine = () => {
-    if (placedShips.includes("submarine")) return;
+    if (placedShips.includes(`${owner}-submarine`)) return;
     return (
       <div className="ship-container grid-template-columns" onDragStart={dragShip} draggable="true">
         {[1, 2, 3].map((ele) => {
@@ -106,7 +106,7 @@ export default function ShipPicker({ owner, visibility, placedShips, setPlacedSh
   };
 
   let patrolboat = () => {
-    if (placedShips.includes("patrolboat")) return;
+    if (placedShips.includes(`${owner}-patrolboat`)) return;
     return (
       <div className="ship-container grid-template-columns" onDragStart={dragShip} draggable="true">
         {[1, 2].map((ele) => {

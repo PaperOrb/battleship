@@ -8,7 +8,7 @@ export default function Board({ ownerProp, visibility, setPlacedShips, currentSh
   const [board, setBoard] = useState(createBoard(boardSize));
   let { placeShip, updateBoard } = useBoardLogic(board, setBoard, setPlacedShips);
 
-  useAIShipPlacer(currentShip, placeShip, ownerProp );
+  useAIShipPlacer(currentShip, placeShip, ownerProp);
 
   // set movable squares when a ship is selected
   useEffect(() => {
@@ -86,7 +86,7 @@ export default function Board({ ownerProp, visibility, setPlacedShips, currentSh
         onClick={clickHandler}
         data-coords={JSON.stringify(sq.coords)}
         onDragOver={(e) => e.preventDefault()}
-        onDrop={(event) => placeShip(event, nullAIShipCoords, currentShip, setPlacedShips, updateBoard)}
+        onDrop={(event) => placeShip(event, nullAIShipCoords, currentShip)}
       ></div>
     );
   };
