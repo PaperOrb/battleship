@@ -136,7 +136,7 @@ export default function ShipPicker({ owner, visibility, placedShips, setPlacedSh
     });
     let ships = document.getElementsByClassName("ship-container");
     let shipPicker = document.getElementById(`${owner}-ship-picker`);
-    console.log(shipPicker);
+
     Array.from(ships).forEach((ship) => {
       ship.classList.toggle("grid-template-columns");
       ship.classList.toggle("grid-template-rows");

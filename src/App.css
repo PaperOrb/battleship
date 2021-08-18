@@ -92,10 +92,38 @@ html, body {
   background-color: var(--primary-color);
 }
 
+.loading-screen {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--water);
+  width: 100vw;
+  height: 100vh;
+}
+
+.loading-screen-text {
+  font-size: 1.7rem;
+}
+
+.hide-loading-screen {
+  opacity: 0;
+  transition: all 1s;
+  height: 0;
+}
+
+.unhide-loading-screen {
+  transition: all 1s;
+}
+
 .hide-element {
   display: none;
+  opacity: 0;
+  transition: all 1s;
 }
 
 .unhide-element {
-  display: visible
+  display: visible;
+  opacity: 1;
+  transition: all 1s;
 }
