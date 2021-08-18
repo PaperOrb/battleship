@@ -48,20 +48,17 @@ export default function Board({ ownerProp, visibility, setPlacedShips, currentSh
   }
 
   let attackSq = (e) => {
-    if (e.target.classList.contains("empty-sq")) {
-      let domCoords = e.target.getAttribute("data-coords");
+    let domCoords = e.target.getAttribute("data-coords");
 
-      updateBoard((boardEle) => {
-        if (JSON.stringify(boardEle.coords) !== domCoords) return boardEle; // update to work with .isHit
-        if (boardEle.isShip === true) {
-          boardEle.isHit = true;
-        } else {
-          boardEle.isChecked = true;
-        }
-
-        return boardEle;
-      });
-    }
+    updateBoard((boardEle) => {
+      if (JSON.stringify(boardEle.coords) !== domCoords) return boardEle; // prevents updating board elements that weren't clicked
+      if (boardEle.isShip === true) {
+        boardEle.isHit = true;
+      } else {
+        boardEle.isChecked = true;
+      }
+      return boardEle;
+    });
   };
 
   let renderSquare = (sq, key) => {
@@ -75,7 +72,7 @@ export default function Board({ ownerProp, visibility, setPlacedShips, currentSh
     } else if (sq.isChecked) {
       squareClass = "board-square checked-sq"; // square has been checked
     }
-    // if (sq.owner !== "player") clickHandler = attackSq;
+    if (sq.owner !== "player") clickHandler = attackSq;
 
     return (
       <div

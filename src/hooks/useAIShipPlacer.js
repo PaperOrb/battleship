@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import useBoardLogic from "./useBoardLogic";
+import { useEffect } from "react";
 
 export default function useAIShipPlacer(currentShip, placeShip, ownerProp) {
   useEffect(() => {

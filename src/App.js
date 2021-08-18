@@ -16,7 +16,6 @@ function App() {
 
   useEffect(() => {
     if (aiPlacedShips.length === 5) {
-      console.log("length is 5");
       setLoadScreenVisibility("hide-loading-screen");
     }
   }, [aiPlacedShips]);
