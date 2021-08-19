@@ -23,8 +23,9 @@ export default function useAIShipPlacer(currentShip, placeShip, ownerProp) {
   useEffect(() => {
     if (ownerProp !== "cpu") return;
     if (!currentShip) return;
-    let min = 0;
-    let max = 6;
+    function randInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1) + min);
+    }
 
     function timeout() {
       return new Promise((resolve) => setTimeout(resolve, 600));
@@ -33,8 +34,8 @@ export default function useAIShipPlacer(currentShip, placeShip, ownerProp) {
     async function placeShipRandomly() {
       for (;;) {
         await timeout();
-        let randX = Math.floor(Math.random() * (max - min + 1) + min);
-        let randY = Math.floor(Math.random() * (max - min + 1) + min);
+        let randX = randInt(0, 6);
+        let randY = randInt(0, 6);
 
         let adjustedCoords = randY === 0 ? randY : `${randY}${randX}`; // first board row has a decimal coord, not base2
         let randomSq = document.getElementById(`cpu-square-${adjustedCoords}`);
