@@ -13,7 +13,7 @@ function App() {
   const [currentAiShip, setCurrentAiShip] = useState(false);
   const [placedShips, setPlacedShips] = useState([]);
   const [aiPlacedShips, setAiPlacedShips] = useState([]);
-  const [turn, setTurn] = useState("player");
+  const [aisTurn, setAisTurn] = useState(false);
 
   // remove load screen
   useEffect(() => {
@@ -40,12 +40,16 @@ function App() {
     }
   }, [aiPlacedShips]);
 
+  let triggerAisTurn = () => {
+    setAisTurn(true);
+  };
+
   return (
     <div>
       <LoadingScreen visibility={loadScreenVisibility}></LoadingScreen>
 
       <div className="board-container">
-        <BoardContext.Provider value={{ turn: turn, setTurn: setTurn }}>
+        <BoardContext.Provider value={{ aisTurn: aisTurn, setAisTurn: setAisTurn }}>
           <Board
             ownerProp="player"
             visibility={playerBoardVisibility}
