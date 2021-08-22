@@ -51,13 +51,13 @@ export default function Board({ ownerProp, visibility, setPlacedShips, currentSh
   }
 
   useEffect(() => {
-    console.log("ai moved:");
     console.log(aisTurn);
+    setAisTurn(false);
   }, [aisTurn]);
 
   let attackSq = (e) => {
     let domCoords = e.target.getAttribute("data-coords");
-    setAisTurn(() => false); // the anon callback below never changes this because said callback is called async by updateBoard. i'm thinking maybe trigger aiMove with a useEffect(()=>{}, [turn]) that's inside of the board to avoid "can't update component while rendering" errors. the effect will trigger a callback in the parent to execute aiMove upon the player's board
+    // the anon callback below never changes this because said callback is called async by updateBoard. i'm thinking maybe trigger aiMove with a useEffect(()=>{}, [turn]) that's inside of the board to avoid "can't update component while rendering" errors. the effect will trigger a callback in the parent to execute aiMove upon the player's board
 
     updateBoard((boardEle) => {
       if (JSON.stringify(boardEle.coords) !== domCoords) return boardEle; // prevents updating board elements that weren't clicked
@@ -69,10 +69,7 @@ export default function Board({ ownerProp, visibility, setPlacedShips, currentSh
         boardEle.isChecked = true;
       }
 
-      setTimeout(() => {
-        setAisTurn(() => true);
-      }, 20);
-
+      setAisTurn(true);
       return boardEle;
     });
     // may need to setState here, then have a useEffect listening which triggers aiPerformAttack on the proper board
