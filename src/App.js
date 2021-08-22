@@ -13,13 +13,16 @@ function App() {
   const [currentAiShip, setCurrentAiShip] = useState(false);
   const [placedShips, setPlacedShips] = useState([]);
   const [aiPlacedShips, setAiPlacedShips] = useState([]);
+  const [turn, setTurn] = useState("player");
 
+  // remove load screen
   useEffect(() => {
     if (aiPlacedShips.length === 5) {
       setLoadScreenVisibility("hide-loading-screen");
     }
   }, [aiPlacedShips]);
 
+  // display enemy board
   useEffect(() => {
     if (placedShips.length === 5) {
       setEnemyBoardVisibility("unhide-element");
@@ -27,6 +30,7 @@ function App() {
     }
   }, [placedShips]);
 
+  // display player board
   useEffect(() => {
     if (aiPlacedShips.length === 5) {
       setPlayerBoardVisibility("unhide-element");
@@ -41,18 +45,20 @@ function App() {
       <LoadingScreen visibility={loadScreenVisibility}></LoadingScreen>
 
       <div className="board-container">
-        <Board
-          ownerProp="player"
-          visibility={playerBoardVisibility}
-          setPlacedShips={setPlacedShips}
-          currentShip={currentShip}
-        />
-        <Board
-          ownerProp="cpu"
-          visibility={enemyBoardVisibility}
-          setPlacedShips={setAiPlacedShips}
-          currentShip={currentAiShip}
-        />
+        <BoardContext.Provider value={{ turn: turn, setTurn: setTurn }}>
+          <Board
+            ownerProp="player"
+            visibility={playerBoardVisibility}
+            setPlacedShips={setPlacedShips}
+            currentShip={currentShip}
+          />
+          <Board
+            ownerProp="cpu"
+            visibility={enemyBoardVisibility}
+            setPlacedShips={setAiPlacedShips}
+            currentShip={currentAiShip}
+          />
+        </BoardContext.Provider>
 
         <ShipPicker
           owner={"player"}
@@ -76,4 +82,4 @@ function App() {
 }
 
 export default App;
-export const ShipContext = React.createContext();
+export const BoardContext = React.createContext({});

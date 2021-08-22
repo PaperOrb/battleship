@@ -1,13 +1,16 @@
-import { useEffect, useContext, useState } from "react";
-import { ShipContext } from "../../App";
+import { useEffect, useState, useContext } from "react";
 import useBoardLogic from "../../hooks/useBoardLogic";
+import { BoardContext } from "../../App";
 import useAIShipPlacer from "../../hooks/useAIShipPlacer";
 
 export default function Board({ ownerProp, visibility, setPlacedShips, currentShip }) {
+  const { turn, setTurn } = useContext(BoardContext);
+  const [aisTurn, setAisTurn] = useState(false);
   const [boardSize] = useState(7);
   const [board, setBoard] = useState(createBoard(boardSize));
-  let { placeShip, updateBoard } = useBoardLogic(board, setBoard, setPlacedShips);
+  let { placeShip, updateBoard, aiPerformAttack } = useBoardLogic(board, setBoard, setPlacedShips);
 
+  // setup AI board
   useAIShipPlacer(currentShip, placeShip, ownerProp);
 
   // set movable squares when a ship is selected
@@ -47,18 +50,31 @@ export default function Board({ ownerProp, visibility, setPlacedShips, currentSh
     return arrWithCoords;
   }
 
+  useEffect(() => {
+    console.log("ai moved:");
+    console.log(aisTurn);
+  }, [aisTurn]);
+
   let attackSq = (e) => {
     let domCoords = e.target.getAttribute("data-coords");
+    setAisTurn(false); // the anon callback below never changes this because said callback is called async by updateBoard. i'm thinking maybe trigger aiMove with a useEffect(()=>{}, [turn]) that's inside of the board to avoid "can't update component while rendering" errors. the effect will trigger a callback in the parent to execute aiMove upon the player's board
 
     updateBoard((boardEle) => {
       if (JSON.stringify(boardEle.coords) !== domCoords) return boardEle; // prevents updating board elements that weren't clicked
+      if (boardEle.isHit || boardEle.isChecked) return boardEle; // do nothing if player clicks previously clicked square
+
       if (boardEle.isShip === true) {
         boardEle.isHit = true;
       } else {
         boardEle.isChecked = true;
       }
+
+      setAisTurn(true);
+
       return boardEle;
     });
+    // may need to setState here, then have a useEffect listening which triggers aiPerformAttack on the proper board
+    // the alternative might be
   };
 
   let renderSquare = (sq, key) => {

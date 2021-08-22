@@ -1,4 +1,21 @@
 export default function useBoardLogic(board, setBoard, setPlacedShips) {
+  let aiPerformAttack = () => {
+    let randomInt = (min, max) => {
+      return Math.floor(Math.random() * (max - min + 1) + min);
+    };
+
+    let coords = [randomInt(0, 6), randomInt(0, 6)];
+    let divToAttack = document.getElementById(coords);
+    // findDivToAtatck
+    // sets board state
+  };
+
+  let findDivToAtatck = () => {
+    board.forEach((ele) => {
+      console.log(ele);
+    });
+  };
+
   let placeShip = (event, aiPickedSq, currentShip) => {
     let coords;
     if (event) {
@@ -69,5 +86,5 @@ export default function useBoardLogic(board, setBoard, setPlacedShips) {
     return occupiedSquares;
   };
 
-  return { placeShip, updateBoard };
+  return { placeShip, updateBoard, aiPerformAttack };
 }
