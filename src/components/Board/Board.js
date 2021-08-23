@@ -5,7 +5,7 @@ import useAIShipPlacer from "../../hooks/useAIShipPlacer";
 
 export default function Board({ ownerProp, visibility, setPlacedShips, currentShip }) {
   const { aisTurn, setAisTurn } = useContext(BoardContext);
-  const [playersTurn, setPlayersTurn] = useState(false);
+  const [playersTurn, setPlayersTurn] = useState(true);
   const [boardSize] = useState(7);
   const [board, setBoard] = useState(createBoard(boardSize));
   let { placeShip, updateBoard, aiPerformAttack } = useBoardLogic(board, setBoard, setPlacedShips);
@@ -83,11 +83,13 @@ export default function Board({ ownerProp, visibility, setPlacedShips, currentSh
     } else {
       setAisTurn(true); // and vise versa
     }
+
     return boardEle;
   };
 
   function attackSq(event = null) {
     let coords;
+
     if (event === null) {
       coords = findEmptyPlayerSq();
     } else {
@@ -104,11 +106,12 @@ export default function Board({ ownerProp, visibility, setPlacedShips, currentSh
       if (!sq.isHit && !sq.isChecked) return [[sq.coords]];
       return [];
     });
+
     let randomIndex = (min, max) => {
       return Math.floor(Math.random() * (max - min + 1) + min);
     };
-    let index = randomIndex(0, availableCoords.length);
 
+    let index = randomIndex(0, availableCoords.length);
     return JSON.stringify(availableCoords[index].flat());
   };
 
@@ -116,6 +119,7 @@ export default function Board({ ownerProp, visibility, setPlacedShips, currentSh
     let clickHandler;
     let nullAIShipCoords = null;
     let squareClass = "board-square empty-sq"; // squares default to empty
+
     if (sq.isHit) {
       squareClass = "board-square hit-sq"; // square contains a hit ship
     } else if (sq.isShip) {
@@ -123,6 +127,7 @@ export default function Board({ ownerProp, visibility, setPlacedShips, currentSh
     } else if (sq.isChecked) {
       squareClass = "board-square checked-sq"; // square has been checked
     }
+
     if (sq.owner !== "player") clickHandler = attackSq;
 
     return (
