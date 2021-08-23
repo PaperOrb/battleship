@@ -111,7 +111,9 @@ export default function Board({ ownerProp, visibility, setPlacedShips, currentSh
       return Math.floor(Math.random() * (max - min + 1) + min);
     };
 
-    let index = randomIndex(0, availableCoords.length);
+    let index = randomIndex(0, availableCoords.length - 1);
+    console.log(availableCoords);
+    console.log("index: " + index);
     return JSON.stringify(availableCoords[index].flat());
   };
 
