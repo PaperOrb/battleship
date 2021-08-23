@@ -10,12 +10,6 @@ export default function useBoardLogic(board, setBoard, setPlacedShips) {
     // sets board state
   };
 
-  let findDivToAtatck = () => {
-    board.forEach((ele) => {
-      console.log(ele);
-    });
-  };
-
   let placeShip = (event, aiPickedSq, currentShip) => {
     let coords;
     if (event) {
@@ -64,11 +58,11 @@ export default function useBoardLogic(board, setBoard, setPlacedShips) {
   };
 
   // updates board with the modified squares returned from callBack
-  let updateBoard = (callBack) => {
+  let updateBoard = (callBack, domCoords = null) => {
     setBoard((prevBoard) => {
       let newBoard = prevBoard.map((row) => {
         return row.map((arrEle) => {
-          return callBack(arrEle);
+          return callBack(arrEle, domCoords);
         });
       });
 

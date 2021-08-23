@@ -40,10 +40,6 @@ function App() {
     }
   }, [aiPlacedShips]);
 
-  let triggerAisTurn = () => {
-    setAisTurn(true);
-  };
-
   return (
     <div>
       <LoadingScreen visibility={loadScreenVisibility}></LoadingScreen>

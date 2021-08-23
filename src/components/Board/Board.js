@@ -5,24 +5,26 @@ import useAIShipPlacer from "../../hooks/useAIShipPlacer";
 
 export default function Board({ ownerProp, visibility, setPlacedShips, currentShip }) {
   const { aisTurn, setAisTurn } = useContext(BoardContext);
-  const [playerMoved, setPlayerMoved] = useState(false);
+  const [playersTurn, setPlayersTurn] = useState(false);
   const [boardSize] = useState(7);
   const [board, setBoard] = useState(createBoard(boardSize));
   let { placeShip, updateBoard, aiPerformAttack } = useBoardLogic(board, setBoard, setPlacedShips);
 
-  // trigger callback on AI board after player has moved
+  // AIs turn is set after playersTurn ends
   useEffect(() => {
     setAisTurn(true);
-    setPlayerMoved(false);
-  }, [playerMoved]);
+    setPlayersTurn(false);
+  }, [playersTurn]);
 
-  // AI attacks
+  // AI attacks after AI turn is set
   useEffect(() => {
-    if (aisTurn === true && ownerProp === "cpu") {
-      console.log("ais turn");
+    if (aisTurn === true && ownerProp === "player") {
+      attackSq();
     }
-    //blah
+
     setAisTurn(false);
+    setPlayersTurn(true);
+    //eslint-disable-next-line
   }, [aisTurn]);
 
   // setup AI board
@@ -65,22 +67,49 @@ export default function Board({ ownerProp, visibility, setPlacedShips, currentSh
     return arrWithCoords;
   }
 
-  let attackSq = (e) => {
-    let domCoords = e.target.getAttribute("data-coords");
+  // filters squares from updateBoard until the clicked square is found, and then updates said sq. then calls next turn
+  let updateSquare = (boardEle, domCoords) => {
+    if (JSON.stringify(boardEle.coords) !== domCoords) return boardEle; // prevents updating board elements that weren't clicked
+    if (boardEle.isHit || boardEle.isChecked) return boardEle; // do nothing if player clicks previously clicked square
 
-    updateBoard((boardEle) => {
-      if (JSON.stringify(boardEle.coords) !== domCoords) return boardEle; // prevents updating board elements that weren't clicked
-      if (boardEle.isHit || boardEle.isChecked) return boardEle; // do nothing if player clicks previously clicked square
+    if (boardEle.isShip === true) {
+      boardEle.isHit = true;
+    } else {
+      boardEle.isChecked = true;
+    }
 
-      if (boardEle.isShip === true) {
-        boardEle.isHit = true;
-      } else {
-        boardEle.isChecked = true;
-      }
+    if (ownerProp === "cpu") {
+      setPlayersTurn(false); // move was made against CPU board, so now its AIs turn against player board
+    } else {
+      setAisTurn(true); // and vise versa
+    }
+    return boardEle;
+  };
 
-      setPlayerMoved(true);
-      return boardEle;
+  function attackSq(event = null) {
+    let coords;
+    if (event === null) {
+      coords = findEmptyPlayerSq();
+    } else {
+      coords = event.target.getAttribute("data-coords");
+    }
+
+    updateBoard(updateSquare, coords);
+  }
+
+  let findEmptyPlayerSq = () => {
+    // grab flat array of coords for unhit, unchecked spots
+    let flatBoard = board.flat();
+    let availableCoords = flatBoard.flatMap((sq) => {
+      if (!sq.isHit && !sq.isChecked) return [[sq.coords]];
+      return [];
     });
+    let randomIndex = (min, max) => {
+      return Math.floor(Math.random() * (max - min + 1) + min);
+    };
+    let index = randomIndex(0, availableCoords.length);
+
+    return JSON.stringify(availableCoords[index].flat());
   };
 
   let renderSquare = (sq, key) => {
