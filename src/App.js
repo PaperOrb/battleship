@@ -51,12 +51,14 @@ function App() {
             visibility={playerBoardVisibility}
             setPlacedShips={setPlacedShips}
             currentShip={currentShip}
+            placedShips={placedShips}
           />
           <Board
             ownerProp="cpu"
             visibility={enemyBoardVisibility}
             setPlacedShips={setAiPlacedShips}
             currentShip={currentAiShip}
+            placedShips={aiPlacedShips}
           />
         </BoardContext.Provider>
 

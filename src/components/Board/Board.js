@@ -3,12 +3,19 @@ import useBoardLogic from "../../hooks/useBoardLogic";
 import { BoardContext } from "../../App";
 import useAIShipPlacer from "../../hooks/useAIShipPlacer";
 
-export default function Board({ ownerProp, visibility, setPlacedShips, currentShip }) {
+export default function Board({ ownerProp, visibility, setPlacedShips, currentShip, placedShips }) {
   const { aisTurn, setAisTurn } = useContext(BoardContext);
   const [playersTurn, setPlayersTurn] = useState(true);
   const [boardSize] = useState(7);
   const [board, setBoard] = useState(createBoard(boardSize));
-  let { placeShip, updateBoard, aiPerformAttack } = useBoardLogic(board, setBoard, setPlacedShips);
+  let { placeShip, updateBoard } = useBoardLogic(board, setBoard, setPlacedShips);
+
+  useEffect(() => {
+    let allShipsSunk = placedShips.every((ship) => {
+      return ship.health === 0;
+    });
+    console.log(allShipsSunk);
+  }, [board]);
 
   // AIs turn is set after playersTurn ends
   useEffect(() => {
@@ -60,7 +67,14 @@ export default function Board({ ownerProp, visibility, setPlacedShips, currentSh
 
     let arrWithCoords = arr.map((row, row_ind) => {
       return row.map((element, col_ind) => {
-        return { owner: ownerProp, isShip: false, isHit: false, coords: [row_ind, col_ind], isChecked: false };
+        return {
+          owner: ownerProp,
+          isShip: false,
+          isHit: false,
+          coords: [row_ind, col_ind],
+          isChecked: false,
+          shipObj: null,
+        };
       });
     });
 
@@ -74,6 +88,7 @@ export default function Board({ ownerProp, visibility, setPlacedShips, currentSh
 
     if (boardEle.isShip === true) {
       boardEle.isHit = true;
+      boardEle.shipObj.health -= 1;
     } else {
       boardEle.isChecked = true;
     }
@@ -112,8 +127,6 @@ export default function Board({ ownerProp, visibility, setPlacedShips, currentSh
     };
 
     let index = randomIndex(0, availableCoords.length - 1);
-    console.log(availableCoords);
-    console.log("index: " + index);
     return JSON.stringify(availableCoords[index].flat());
   };
 

@@ -1,15 +1,4 @@
 export default function useBoardLogic(board, setBoard, setPlacedShips) {
-  let aiPerformAttack = () => {
-    let randomInt = (min, max) => {
-      return Math.floor(Math.random() * (max - min + 1) + min);
-    };
-
-    let coords = [randomInt(0, 6), randomInt(0, 6)];
-    let divToAttack = document.getElementById(coords);
-    // findDivToAtatck
-    // sets board state
-  };
-
   let placeShip = (event, aiPickedSq, currentShip) => {
     let coords;
     if (event) {
@@ -43,14 +32,17 @@ export default function useBoardLogic(board, setBoard, setPlacedShips) {
       return false;
     } else {
       setPlacedShips((prevPlacedShips) => {
-        return [...prevPlacedShips, currentShip.name];
+        return [...prevPlacedShips, currentShip];
       });
     }
 
     updateBoard((boardEle) => {
       occupiedShipSquares.forEach((domCoordInt) => {
         let coordString = JSON.stringify(domCoordInt);
-        if (JSON.stringify(boardEle.coords) === coordString) boardEle.isShip = true;
+        if (JSON.stringify(boardEle.coords) === coordString) {
+          boardEle.isShip = true;
+          boardEle.shipObj = currentShip;
+        }
       });
       return boardEle;
     });
@@ -80,5 +72,5 @@ export default function useBoardLogic(board, setBoard, setPlacedShips) {
     return occupiedSquares;
   };
 
-  return { placeShip, updateBoard, aiPerformAttack };
+  return { placeShip, updateBoard };
 }
