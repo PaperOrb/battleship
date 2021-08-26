@@ -3,12 +3,42 @@ import useBoardLogic from "../../hooks/useBoardLogic";
 import { BoardContext } from "../../App";
 import useAIShipPlacer from "../../hooks/useAIShipPlacer";
 
-export default function Board({ ownerProp, visibility, setPlacedShips, currentShip }) {
-  const { turn, setTurn } = useContext(BoardContext);
-  const [aisTurn, setAisTurn] = useState(false);
+export default function Board({ ownerProp, visibility, setPlacedShips, currentShip, placedShips }) {
+  const { aisTurn, setAisTurn, declareVictory } = useContext(BoardContext);
+  const [playersTurn, setPlayersTurn] = useState(true);
   const [boardSize] = useState(7);
   const [board, setBoard] = useState(createBoard(boardSize));
-  let { placeShip, updateBoard, aiPerformAttack } = useBoardLogic(board, setBoard, setPlacedShips);
+  let { placeShip, updateBoard } = useBoardLogic(board, setBoard, setPlacedShips);
+
+  // check for victory
+  useEffect(() => {
+    let allShipsSunk = placedShips.every((ship) => {
+      return ship.health === 0;
+    });
+    if (allShipsSunk && placedShips.length === 5) {
+      let victor = ownerProp === "cpu" ? "You" : "CPU Player";
+      let winMsg = `${victor} won!`;
+      declareVictory(winMsg);
+    }
+    //eslint-disable-next-line
+  }, [board]);
+
+  // AIs turn is set after playersTurn ends
+  useEffect(() => {
+    setAisTurn(true);
+    setPlayersTurn(false);
+  }, [playersTurn]);
+
+  // AI attacks after AI turn is set
+  useEffect(() => {
+    if (aisTurn === true && ownerProp === "player") {
+      attackSq();
+    }
+
+    setAisTurn(false);
+    setPlayersTurn(true);
+    //eslint-disable-next-line
+  }, [aisTurn]);
 
   // setup AI board
   useAIShipPlacer(currentShip, placeShip, ownerProp);
@@ -43,43 +73,74 @@ export default function Board({ ownerProp, visibility, setPlacedShips, currentSh
 
     let arrWithCoords = arr.map((row, row_ind) => {
       return row.map((element, col_ind) => {
-        return { owner: ownerProp, isShip: false, isHit: false, coords: [row_ind, col_ind], isChecked: false };
+        return {
+          owner: ownerProp,
+          isShip: false,
+          isHit: false,
+          coords: [row_ind, col_ind],
+          isChecked: false,
+          shipObj: null,
+        };
       });
     });
 
     return arrWithCoords;
   }
 
-  useEffect(() => {
-    console.log(aisTurn);
-    setAisTurn(false);
-  }, [aisTurn]);
+  // filters squares from updateBoard until the clicked square is found, and then updates said sq. then calls next turn
+  let updateSquare = (boardEle, domCoords) => {
+    if (JSON.stringify(boardEle.coords) !== domCoords) return boardEle; // prevents updating board elements that weren't clicked
+    if (boardEle.isHit || boardEle.isChecked) return boardEle; // do nothing if player clicks previously clicked square
 
-  let attackSq = (e) => {
-    let domCoords = e.target.getAttribute("data-coords");
-    // the anon callback below never changes this because said callback is called async by updateBoard. i'm thinking maybe trigger aiMove with a useEffect(()=>{}, [turn]) that's inside of the board to avoid "can't update component while rendering" errors. the effect will trigger a callback in the parent to execute aiMove upon the player's board
+    if (boardEle.isShip === true) {
+      boardEle.isHit = true;
+      boardEle.shipObj.health -= 1;
+    } else {
+      boardEle.isChecked = true;
+    }
 
-    updateBoard((boardEle) => {
-      if (JSON.stringify(boardEle.coords) !== domCoords) return boardEle; // prevents updating board elements that weren't clicked
-      if (boardEle.isHit || boardEle.isChecked) return boardEle; // do nothing if player clicks previously clicked square
+    if (ownerProp === "cpu") {
+      setPlayersTurn(false); // move was made against CPU board, so now its AIs turn against player board
+    } else {
+      setAisTurn(true); // and vise versa
+    }
 
-      if (boardEle.isShip === true) {
-        boardEle.isHit = true;
-      } else {
-        boardEle.isChecked = true;
-      }
+    return boardEle;
+  };
 
-      setAisTurn(true);
-      return boardEle;
+  function attackSq(event = null) {
+    let coords;
+
+    if (event === null) {
+      coords = findEmptyPlayerSq();
+    } else {
+      coords = event.target.getAttribute("data-coords");
+    }
+
+    updateBoard(updateSquare, coords);
+  }
+
+  let findEmptyPlayerSq = () => {
+    // grab flat array of coords for unhit, unchecked spots
+    let flatBoard = board.flat();
+    let availableCoords = flatBoard.flatMap((sq) => {
+      if (!sq.isHit && !sq.isChecked) return [[sq.coords]];
+      return [];
     });
-    // may need to setState here, then have a useEffect listening which triggers aiPerformAttack on the proper board
-    // the alternative might be
+
+    let randomIndex = (min, max) => {
+      return Math.floor(Math.random() * (max - min + 1) + min);
+    };
+
+    let index = randomIndex(0, availableCoords.length - 1);
+    return JSON.stringify(availableCoords[index].flat());
   };
 
   let renderSquare = (sq, key) => {
     let clickHandler;
     let nullAIShipCoords = null;
     let squareClass = "board-square empty-sq"; // squares default to empty
+
     if (sq.isHit) {
       squareClass = "board-square hit-sq"; // square contains a hit ship
     } else if (sq.isShip) {
@@ -87,6 +148,7 @@ export default function Board({ ownerProp, visibility, setPlacedShips, currentSh
     } else if (sq.isChecked) {
       squareClass = "board-square checked-sq"; // square has been checked
     }
+
     if (sq.owner !== "player") clickHandler = attackSq;
 
     return (
