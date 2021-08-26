@@ -116,6 +116,46 @@ html, body {
   transition: all 1s;
 }
 
+.victory-screen {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: var(--water);
+  width: 100vw;
+  height: 100vh;
+}
+
+.restart-btn {
+  background: var(--missed);
+  border-radius: 5px;
+  border: 1px solid black;
+  margin-top: 1rem;
+  padding: 5px;
+  transition: all 150ms;
+}
+
+.restart-btn:hover {
+  color: white;
+  background: var(--primary-color);
+  transform: scale(120%);
+}
+
+.victory-screen-text {
+  font-size: 1.7rem;
+}
+
+.hide-victory-screen {
+  opacity: 0;
+  transition: all 1s;
+  height: 0;
+}
+
+.unhide-victory-screen {
+  transition: all 1s;
+}
+
 .hide-element {
   display: none;
   opacity: 0;

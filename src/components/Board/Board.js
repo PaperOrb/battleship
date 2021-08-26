@@ -4,17 +4,23 @@ import { BoardContext } from "../../App";
 import useAIShipPlacer from "../../hooks/useAIShipPlacer";
 
 export default function Board({ ownerProp, visibility, setPlacedShips, currentShip, placedShips }) {
-  const { aisTurn, setAisTurn } = useContext(BoardContext);
+  const { aisTurn, setAisTurn, declareVictory } = useContext(BoardContext);
   const [playersTurn, setPlayersTurn] = useState(true);
   const [boardSize] = useState(7);
   const [board, setBoard] = useState(createBoard(boardSize));
   let { placeShip, updateBoard } = useBoardLogic(board, setBoard, setPlacedShips);
 
+  // check for victory
   useEffect(() => {
     let allShipsSunk = placedShips.every((ship) => {
       return ship.health === 0;
     });
-    console.log(allShipsSunk);
+    if (allShipsSunk && placedShips.length === 5) {
+      let victor = ownerProp === "cpu" ? "You" : "CPU Player";
+      let winMsg = `${victor} won!`;
+      declareVictory(winMsg);
+    }
+    //eslint-disable-next-line
   }, [board]);
 
   // AIs turn is set after playersTurn ends
