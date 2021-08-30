@@ -48,7 +48,7 @@ export default function ShipPicker({ owner, visibility, placedShips, setPlacedSh
   let battleship = () => {
     let shipWasPlaced = placedShips.some((ship) => ship.name === `${owner}-battleship`);
     if (shipWasPlaced) return;
-    
+
     return (
       <div className="ship-container grid-template-columns" onDragStart={dragShip} draggable="true">
         {[1, 2, 3, 4].map((ele) => {
@@ -71,7 +71,7 @@ export default function ShipPicker({ owner, visibility, placedShips, setPlacedSh
   let destroyer = () => {
     let shipWasPlaced = placedShips.some((ship) => ship.name === `${owner}-destroyer`);
     if (shipWasPlaced) return;
-    
+
     return (
       <div className="ship-container grid-template-columns" onDragStart={dragShip} draggable="true">
         {[1, 2, 3].map((ele) => {
@@ -94,7 +94,7 @@ export default function ShipPicker({ owner, visibility, placedShips, setPlacedSh
   let submarine = () => {
     let shipWasPlaced = placedShips.some((ship) => ship.name === `${owner}-submarine`);
     if (shipWasPlaced) return;
-    
+
     return (
       <div className="ship-container grid-template-columns" onDragStart={dragShip} draggable="true">
         {[1, 2, 3].map((ele) => {
@@ -117,7 +117,7 @@ export default function ShipPicker({ owner, visibility, placedShips, setPlacedSh
   let patrolboat = () => {
     let shipWasPlaced = placedShips.some((ship) => ship.name === `${owner}-patrolboat`);
     if (shipWasPlaced) return;
-    
+
     return (
       <div className="ship-container grid-template-columns" onDragStart={dragShip} draggable="true">
         {[1, 2].map((ele) => {
@@ -156,16 +156,6 @@ export default function ShipPicker({ owner, visibility, placedShips, setPlacedSh
     shipPicker.classList.toggle("grid-template-rows");
   };
 
-  // debugging methods
-  let showenemyboard = () => {
-    setPlacedShips(["carrier", "battleship", "destroyer", "submarine", "patrolboat"]);
-  };
-
-  let showPlayerBoard = () => {
-    setPlacedShips(["carrier", "battleship", "destroyer", "submarine", "patrolboat"]);
-  };
-  // end debugging methods
-
   return (
     <div className={`${visibility}`}>
       <div id={`${owner}-ship-picker`} className={`ship-picker grid-template-rows`}>
@@ -179,12 +169,6 @@ export default function ShipPicker({ owner, visibility, placedShips, setPlacedSh
       <div>
         <button className="orientation-btn" onClick={toggleOrientation}>
           Toggle Orientation
-        </button>
-        <button className="orientation-btn" onClick={showenemyboard}>
-          begin game
-        </button>
-        <button className="orientation-btn" onClick={showPlayerBoard}>
-          show player board
         </button>
       </div>
     </div>

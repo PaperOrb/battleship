@@ -100,9 +100,9 @@ export default function Board({ ownerProp, visibility, setPlacedShips, currentSh
     }
 
     if (ownerProp === "cpu") {
-      setPlayersTurn(false); // move was made against CPU board, so now its AIs turn against player board
+      setPlayersTurn(false); // move was made against CPU board, so now it's AIs turn against player board
     } else {
-      setAisTurn(true); // and vise versa
+      setAisTurn(true);
     }
 
     return boardEle;
@@ -121,8 +121,9 @@ export default function Board({ ownerProp, visibility, setPlacedShips, currentSh
   }
 
   let findEmptyPlayerSq = () => {
-    // grab flat array of coords for unhit, unchecked spots
     let flatBoard = board.flat();
+
+    // grab flat array of coords for unhit, unchecked spots
     let availableCoords = flatBoard.flatMap((sq) => {
       if (!sq.isHit && !sq.isChecked) return [[sq.coords]];
       return [];

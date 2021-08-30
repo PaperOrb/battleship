@@ -74,7 +74,9 @@ function App() {
     <div>
       <LoadingScreen visibility={loadScreenVisibility}></LoadingScreen>
       <VictoryScreen visibility={victoryScreenVisibility} winMsg={winMsg} restartGame={restartGame}></VictoryScreen>
-
+      <div className="header">
+        <div>Battleship</div>
+      </div>
       <div className="board-container">
         <BoardContext.Provider value={{ aisTurn: aisTurn, setAisTurn: setAisTurn, declareVictory: declareVictory }}>
           {showBoards && (

@@ -1,12 +1,22 @@
 import { render, fireEvent } from "@testing-library/react";
 import Board from "./Board";
-import { ShipContext } from "../../App";
+import useAIShipPlacer from "../../hooks/useAIShipPlacer";
+import { BoardContext } from "../../App";
+
+jest.mock("../../hooks/useAIShipPlacer");
+useAIShipPlacer.mockResolvedValue("blah");
 
 const setupBoard = (ship, owner) => {
   return render(
-    <ShipContext.Provider value={{ currentShip: ship, setPlacedShips: () => {} }}>
-      <Board ownerProp={owner} visibility={"unhide-element"} />
-    </ShipContext.Provider>
+    <BoardContext.Provider value={{ aisTurn: false, setAisTurn: jest.fn(), declareVictory: jest.fn() }}>
+      <Board
+        ownerProp={owner}
+        visibility={"hide-element"}
+        setPlacedShips={jest.fn()}
+        currentShip={ship}
+        placedShips={[]}
+      />
+    </BoardContext.Provider>
   );
 };
 
@@ -14,14 +24,16 @@ describe("attacking enemy square", () => {
   let currentShip;
   let enemyBoard;
   let sqToAttack;
+
   beforeEach(() => {
-    currentShip = { name: "carrier", index: 5, aftSquares: 0, foreSquares: 4, direction: "horizontal" };
+    currentShip = { name: "carrier", index: 5, aftSquares: 0, foreSquares: 4, direction: "horizontal", health: 5 };
     enemyBoard = setupBoard(currentShip, "cpu");
     sqToAttack = enemyBoard.getByTestId("square0_cpu");
-    fireEvent.click(sqToAttack);
   });
+
   describe("that's empty", () => {
     test("sets color to gray", () => {
+      fireEvent.click(sqToAttack);
       expect(sqToAttack.classList.contains("checked-sq")).toEqual(true);
     });
   });
@@ -29,6 +41,7 @@ describe("attacking enemy square", () => {
   describe("that has enemy ship", () => {
     test("sets color to red", () => {
       fireEvent.drop(sqToAttack);
+      fireEvent.click(sqToAttack);
       expect(sqToAttack.classList.contains("hit-sq")).toEqual(true);
     });
   });
@@ -37,12 +50,14 @@ describe("attacking enemy square", () => {
 describe("drag & drop", () => {
   describe("horizontal carrier by its first square", () => {
     let currentShip;
+    let boardComponent;
+
     beforeEach(() => {
       currentShip = { name: "carrier", index: 5, aftSquares: 0, foreSquares: 4, direction: "horizontal" };
+      boardComponent = setupBoard(currentShip, "player");
     });
 
     test("onto board[0, 0] is allowed", () => {
-      let boardComponent = setupBoard(currentShip, "player");
       let sqDestination = boardComponent.getByTestId(`square0_player`);
       fireEvent.drop(sqDestination);
 
@@ -55,7 +70,6 @@ describe("drag & drop", () => {
     });
 
     test("onto board[0, 6] is disallowed", () => {
-      let boardComponent = setupBoard(currentShip, "player");
       let sqDestination = boardComponent.getByTestId(`square6_player`);
       fireEvent.drop(sqDestination);
 
@@ -68,7 +82,6 @@ describe("drag & drop", () => {
     });
 
     test("onto occupied spot is disallowed", () => {
-      let boardComponent = setupBoard(currentShip, "player");
       let occupiedSpot = boardComponent.getByTestId(`square1_player`);
       fireEvent.drop(occupiedSpot);
 

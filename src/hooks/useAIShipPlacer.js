@@ -37,7 +37,7 @@ export default function useAIShipPlacer(currentShip, placeShip, ownerProp) {
         let randX = randInt(0, 6);
         let randY = randInt(0, 6);
 
-        let adjustedCoords = randY === 0 ? randY : `${randY}${randX}`; // first board row has a decimal coord, not base2
+        let adjustedCoords = randY === 0 ? randY : `${randY}${randX}`; // first board row is numbered using only ones place
         let randomSq = document.getElementById(`cpu-square-${adjustedCoords}`);
         let shipPlaced = placeShip(null, randomSq, currentShip);
         if (shipPlaced) return;
