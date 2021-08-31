@@ -1,7 +1,28 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function ShipPicker({ owner, visibility, placedShips, setPlacedShips, currentShip, setCurrentShip }) {
   const [orientation, setOrientation] = useState("horizontal");
+
+  // applies correct orientation class to ship divs when orientation state changes
+  useEffect(() => {
+    let prevOrientation = orientation === "vertical" ? "horizontal" : "vertical";
+    let ships = document.getElementsByClassName("ship-container");
+    let shipPicker = document.getElementById(`${owner}-ship-picker`);
+
+    Array.from(ships).forEach((ship) => {
+      ship.classList.remove(`grid-template-${prevOrientation}`);
+      ship.classList.add(`grid-template-${orientation}`);
+    });
+    shipPicker.classList.remove(`grid-template-${orientation}`);
+    shipPicker.classList.add(`grid-template-${prevOrientation}`);
+    //eslint-disable-next-line
+  }, [orientation]);
+
+  let toggleOrientation = () => {
+    setOrientation((prevOrientation) => {
+      return prevOrientation === "vertical" ? "horizontal" : "vertical";
+    });
+  };
 
   // sets ship object when a ship is dragged/clicked
   let setupShip = (e) => {
@@ -27,7 +48,7 @@ export default function ShipPicker({ owner, visibility, placedShips, setPlacedSh
     if (shipWasPlaced) return;
 
     return (
-      <div className="ship-container grid-template-columns" onDragStart={dragShip} draggable="true">
+      <div className="ship-container grid-template-horizontal" onDragStart={dragShip} draggable="true">
         {[1, 2, 3, 4, 5].map((ele) => {
           return (
             <div
@@ -50,7 +71,7 @@ export default function ShipPicker({ owner, visibility, placedShips, setPlacedSh
     if (shipWasPlaced) return;
 
     return (
-      <div className="ship-container grid-template-columns" onDragStart={dragShip} draggable="true">
+      <div className="ship-container grid-template-horizontal" onDragStart={dragShip} draggable="true">
         {[1, 2, 3, 4].map((ele) => {
           return (
             <div
@@ -73,7 +94,7 @@ export default function ShipPicker({ owner, visibility, placedShips, setPlacedSh
     if (shipWasPlaced) return;
 
     return (
-      <div className="ship-container grid-template-columns" onDragStart={dragShip} draggable="true">
+      <div className="ship-container grid-template-horizontal" onDragStart={dragShip} draggable="true">
         {[1, 2, 3].map((ele) => {
           return (
             <div
@@ -96,7 +117,7 @@ export default function ShipPicker({ owner, visibility, placedShips, setPlacedSh
     if (shipWasPlaced) return;
 
     return (
-      <div className="ship-container grid-template-columns" onDragStart={dragShip} draggable="true">
+      <div className="ship-container grid-template-horizontal" onDragStart={dragShip} draggable="true">
         {[1, 2, 3].map((ele) => {
           return (
             <div
@@ -119,7 +140,7 @@ export default function ShipPicker({ owner, visibility, placedShips, setPlacedSh
     if (shipWasPlaced) return;
 
     return (
-      <div className="ship-container grid-template-columns" onDragStart={dragShip} draggable="true">
+      <div className="ship-container grid-template-horizontal" onDragStart={dragShip} draggable="true">
         {[1, 2].map((ele) => {
           return (
             <div
@@ -141,24 +162,9 @@ export default function ShipPicker({ owner, visibility, placedShips, setPlacedSh
     event.dataTransfer.setData("ship", JSON.stringify(currentShip));
   };
 
-  let toggleOrientation = () => {
-    setOrientation((prevOrientation) => {
-      return prevOrientation === "vertical" ? "horizontal" : "vertical";
-    });
-    let ships = document.getElementsByClassName("ship-container");
-    let shipPicker = document.getElementById(`${owner}-ship-picker`);
-
-    Array.from(ships).forEach((ship) => {
-      ship.classList.toggle("grid-template-columns");
-      ship.classList.toggle("grid-template-rows");
-    });
-    shipPicker.classList.toggle("grid-template-columns");
-    shipPicker.classList.toggle("grid-template-rows");
-  };
-
   return (
     <div className={`${visibility}`}>
-      <div id={`${owner}-ship-picker`} className={`ship-picker grid-template-rows`}>
+      <div id={`${owner}-ship-picker`} className={`ship-picker grid-template-vertical`}>
         {carrier()}
         {battleship()}
         {destroyer()}

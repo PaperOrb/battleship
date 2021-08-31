@@ -72,12 +72,12 @@ html, body {
   height: 35vw;
 }
 
-.grid-template-columns {
+.grid-template-horizontal {
   grid-template-columns: repeat(7, 1fr);
   padding-top: 1rem;
 }
 
-.grid-template-rows {
+.grid-template-vertical {
   grid-template-rows: repeat(7, 1fr);
   padding-left: 1rem;
 }

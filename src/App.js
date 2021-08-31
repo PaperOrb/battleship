@@ -55,13 +55,11 @@ function App() {
   };
 
   let restartGame = () => {
-    setShowBoards(false); // unmounts conditionally rendered boards to reset their state
+    setShowBoards(false); // unmounts conditionally rendered boards to reset their state and elements
     setLoadScreenVisibility("unhide-loading-screen");
     setVictoryScreenVisibility("hide-victory-screen");
     setEnemyBoardVisibility("unhide-element");
     setPlayerBoardVisibility("hide-element");
-    setEnemyShipPickerVisibility("unhide-element");
-    setPlayerShipPickerVisibility("hide-element");
     setCurrentShip(false);
     setCurrentAiShip(false);
     setPlacedShips([]);
@@ -98,23 +96,26 @@ function App() {
             />
           )}
         </BoardContext.Provider>
-
-        <ShipPicker
-          owner={"player"}
-          visibility={playerShipPickerVisibility}
-          placedShips={placedShips}
-          setPlacedShips={setPlacedShips}
-          currentShip={currentShip}
-          setCurrentShip={setCurrentShip}
-        />
-        <ShipPicker
-          owner={"cpu"}
-          visibility={enemyShipPickerVisibility}
-          placedShips={aiPlacedShips}
-          setPlacedShips={setAiPlacedShips}
-          currentShip={currentAiShip}
-          setCurrentShip={setCurrentAiShip}
-        />
+        {showBoards && (
+          <ShipPicker
+            owner={"player"}
+            visibility={playerShipPickerVisibility}
+            placedShips={placedShips}
+            setPlacedShips={setPlacedShips}
+            currentShip={currentShip}
+            setCurrentShip={setCurrentShip}
+          />
+        )}
+        {showBoards && (
+          <ShipPicker
+            owner={"cpu"}
+            visibility={enemyShipPickerVisibility}
+            placedShips={aiPlacedShips}
+            setPlacedShips={setAiPlacedShips}
+            currentShip={currentAiShip}
+            setCurrentShip={setCurrentAiShip}
+          />
+        )}
       </div>
     </div>
   );
