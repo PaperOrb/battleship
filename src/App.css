@@ -1,8 +1,8 @@
 :root {
   --primary-color: rgb(35,35,44);
-  --water: rgb(12, 103, 177);
+  --water: rgb(1, 119, 187);
   --missed: rgb(108, 114, 122);
-  --ship-color: rgba(77, 199, 6, 0.671);
+  --ship-color: rgb(70, 255, 101);
 }
 
 html, body {
@@ -57,7 +57,7 @@ html, body {
 }
 
 .hit-sq {
-  background-color: rgba(246, 21, 0, 0.685);
+  background-color: rgb(255, 25, 25);
 }
 
 .placing-ship-on-sq:hover {

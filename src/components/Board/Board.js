@@ -144,7 +144,7 @@ export default function Board({ ownerProp, visibility, setPlacedShips, currentSh
 
     if (sq.isHit) {
       squareClass = "board-square hit-sq"; // square contains a hit ship
-    } else if (sq.isShip) {
+    } else if (sq.isShip && ownerProp === "player") {
       squareClass = "board-square friendly-sq"; // square contains a friendly ship
     } else if (sq.isChecked) {
       squareClass = "board-square checked-sq"; // square has been checked
